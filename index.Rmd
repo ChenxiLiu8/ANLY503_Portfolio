@@ -1,16 +1,19 @@
 
 
 ```{r, echo=FALSE, out.width="75%",out.height="75%",fig.align = 'center'}
-knitr::include_graphics("intro_2.jpg")
+knitr::include_graphics("images.png")
 ```
 
-# **Welcome!**
+# **ANLY 503 Portfolio**
 
-## My name is Chenxi Liu. I am the tall asian boy that is on the picture.
-## My hobby is playing basketball and video game. One of the main reason
-## that I created this portfilo is I hate drawing. However, the knowledge 
-## that I learned from **ANLY 503** class enable me to create great picture
-## without touching the pencil. Here is some show cases that I have done 
-## over the quarter!
+## This is my Portfolio for **ANLY 503** which is an outstanding visualization
+## class! 
+## One of the main reason that I created this portfilo is I hate drawing.
+## However, the knowledge that I learned from **ANLY 503** class enable me to 
+## create great picture without touching the pencil. Here is some show cases 
+## that I have done over the quarter!
 ## I hope you **enjoy**!
 
+```{r, echo=FALSE, out.width="75%",out.height="75%",fig.align = 'center'}
+knitr::include_graphics("bad.png")
+```

@@ -304,6 +304,10 @@ library(wordcloud)
 word_count <- tweets_cleaned %>%
   count(word, sort = TRUE) %>%
   top_n(50)
+layout(matrix(c(1, 2), nrow=2), heights=c(1, 4))
+par(mar=rep(0, 4))
+plot.new()
+text(x=0.5, y=0.5, "Most Frequent Words In Airline Related Tweets")
 wordcloud(words = word_count$word, freq = word_count$n, scale=c(2, .2),random.color = FALSE,        
           max.words=100, random.order=FALSE, colors= c("coral1","coral2","coral3","coral4"))
 ```
