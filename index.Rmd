@@ -1,9 +1,16 @@
----
-title: "My Website"
----
 
-Hello, Website!
 
-For more information about simple R Markdown websites, please read the documentation at https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html.
+```{r, echo=FALSE, out.width="75%",out.height="75%",fig.align = 'center'}
+knitr::include_graphics("intro_2.jpg")
+```
 
-Please also note that simple R Markdown sites are _not_ based on **blogdown**. They are probably good for websites with only a few Rmd documents. For larger-scale and more sophisticated websites (such as blogs), you may want to use **blogdown** instead: https://github.com/rstudio/blogdown.
+# **Welcome!**
+
+## My name is Chenxi Liu. I am the tall asian boy that is on the picture.
+## My hobby is playing basketball and video game. One of the main reason
+## that I created this portfilo is I hate drawing. However, the knowledge 
+## that I learned from **ANLY 503** class enable me to create great picture
+## without touching the pencil. Here is some show cases that I have done 
+## over the quarter!
+## I hope you **enjoy**!
+

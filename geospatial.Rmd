@@ -1,0 +1,334 @@
+
+## Chenxi Liu
+## Assightment 7
+
+
+```{r,echo=FALSE,warning=FALSE,include=FALSE}
+
+library(spData, warn.conflicts = F, quietly = T)
+library(maps, warn.conflicts = F, quietly = T)
+library(viridis, warn.conflicts = F, quietly = T)
+library(ggpubr, warn.conflicts = F, quietly = T)
+library(cowplot, warn.conflicts = F, quietly = T)
+library(stringr, warn.conflicts = F, quietly = T)
+library(reticulate, warn.conflicts = F, quietly = T)
+library(dplyr, warn.conflicts = F, quietly = T)
+library(tidyr, warn.conflicts = F, quietly = T)
+library(readxl, warn.conflicts = F, quietly = T)
+library(janitor, warn.conflicts = F, quietly = T)
+library(tidyverse, warn.conflicts = F, quietly = T)
+library(ggplot2, warn.conflicts = F, quietly = T)
+library(sf, warn.conflicts = F, quietly = T)
+```
+
+
+
+```{r,echo=FALSE,warning=FALSE,include=FALSE}
+py_install('matplotlib')
+py_install('plotly')
+py_install('xlrd')
+py_install('pandas')
+py_install('numpy')
+```
+
+```{python,echo=FALSE,warning=FALSE,include=FALSE}
+import numpy as np
+import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.offline as py
+import pandas as pd
+import xlrd
+```
+
+
+```{python,echo=FALSE,warning=FALSE,include=FALSE}
+import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.offline as py
+import pandas as pd
+import numpy as np
+
+
+### extract data 
+df = pd.read_csv('countypres_2000-2016.csv')
+df_1 = df[(df['year']==2008)] 
+df_2 = df[(df['year']==2012)] 
+df_3 = df[(df['year']==2016)]
+frames = [df_1, df_2, df_3] 
+df = pd.concat(frames)
+
+df_dem = df[df['party'] == 'democrat']
+df_rep = df[df['party'] == 'republican']
+frames = [df_dem, df_rep] 
+df = pd.concat(frames)
+
+df['won_proportion'] = df['candidatevotes']/df['totalvotes']
+df = df[['year', 'state', 'state_po', 'FIPS', 'county', 'party', 'won_proportion']]
+df = df.dropna(subset=['FIPS'])
+df = df.astype({'FIPS': int})
+df = df.astype({'FIPS': str})
+### fill with 0
+df['FIPS'] = df['FIPS'].apply(lambda x: x.zfill(5))
+df = df.reset_index(drop = True)
+df.to_csv('final_election.csv')
+
+df_unemploy = pd.read_excel('Unemployment.xls', sheet_name = 'Unemployment Med HH Income', skiprows = 7)
+df_unemploy = df_unemploy[['FIPStxt', 'Stabr', 'area_name', 
+                                       'Unemployment_rate_2008', 'Unemployment_rate_2012', 'Unemployment_rate_2016']]
+df_unemploy = pd.melt(df_unemploy, id_vars=["FIPStxt", 'Stabr', 'area_name'], var_name="year", value_name="unemployment_rate")
+df_unemploy = df_unemploy.rename(columns={"FIPStxt": "FIPS"})
+df_unemploy.year = df_unemploy.year.apply(lambda x: x[-4:])
+df_unemploy = df_unemploy.astype({'FIPS': str})
+df_unemploy['FIPS'] = df_unemploy['FIPS'].apply(lambda x: x.zfill(5))
+df_unemploy = df_unemploy.astype({'year': str})
+df_unemploy = df_unemploy.astype({'FIPS': str})
+df_unemploy.to_csv('final_unemployment.csv')
+
+```
+
+
+
+
+
+
+## Task 2
+
+#### Note:
+Three States that I choose is Idaho, Colorado, and California
+I choose democrat Candidates 
+
+We can see that as the color become darker which means the candidates have large vote percentage (notices the scale is different for different states)
+Same with the unemployment rate. As the color become darker the unemployment rate grows. 
+
+```{r,echo=FALSE,warning=FALSE,include=FALSE}
+new_election_data = read_csv('final_election.csv')
+new_unemployment_data = read.csv('final_unemployment.csv')
+new_unemployment_data$FIPS = as.character(new_unemployment_data$FIPS)
+new_unemployment_data$FIPS = str_pad(new_unemployment_data$FIPS, 5, pad = "0")
+```
+
+
+```{r,echo=FALSE,warning=FALSE,include=FALSE}
+# load shape file 
+shape = st_read('tl_2019_us_county.shp')
+
+map_co = shape %>% filter(STATEFP =='08') %>% rename('FIPS'='GEOID')
+
+map_ca = shape %>% filter(STATEFP =='06') %>% rename('FIPS'='GEOID')
+
+map_id = shape %>% filter(STATEFP =='16') %>% rename('FIPS'='GEOID')
+```
+
+## Year of 2008
+
+```{r fig1, fig.height = 30, fig.width = 25, fig.align = "center",echo=FALSE,warning=FALSE}
+# CA Election Vote in 2008
+election_ca_2008 = new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='CA') %>% filter(year=='2008') %>% filter(party=='democrat')
+# merge with shape file 
+election_ca_2008 = map_ca %>% left_join(election_ca_2008[,c('FIPS',"won_proportion")],by='FIPS') 
+
+election_ca_2008_map = ggplot(election_ca_2008) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in California in 2008', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CA Unemployment 
+unemploy_ca_2008=new_unemployment_data %>% filter(Stabr=='CA') %>% filter(year=='2008')
+unemploy_ca_2008=map_ca %>% left_join(unemploy_ca_2008, by='FIPS')
+unemploy_ca_2008_map = ggplot(unemploy_ca_2008)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno",direction = -1)+labs(title='Unemployment Rate in California in 2008', fill='Unemployment Rate(%)') + 
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CO Election Vote
+election_co_2008=new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='CO') %>% filter(year=='2008') %>% filter(party=='democrat')
+election_co_2008 = map_co %>% left_join(election_co_2008[,c('FIPS',"won_proportion")],by='FIPS') 
+election_co_2008_map = ggplot(election_co_2008) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in Colorado in 2008', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CO Unemployment 
+unemploy_co_2008=new_unemployment_data %>% filter(Stabr=='CO') %>% filter(year=='2008')
+unemploy_co_2008=map_co %>% left_join(unemploy_co_2008, by='FIPS')
+unemploy_co_2008_map = ggplot(unemploy_co_2008)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno",direction = -1)+labs(title='Unemployment Rate in Colorado in 2008', fill='Unemployment Rate(%)')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# ID Election Vote
+election_id_2008=new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='ID') %>% filter(year=='2008') %>% filter(party=='democrat')
+election_id_2008 = map_id %>% left_join(election_id_2008[,c('FIPS',"won_proportion")],by='FIPS') 
+election_id_2008_map = ggplot(election_id_2008) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in Idaho in 2008', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+# ID Unemployment 
+unemploy_id_2008=new_unemployment_data %>% filter(Stabr=='ID') %>% filter(year=='2008')
+unemploy_id_2008=map_id %>% left_join(unemploy_id_2008, by='FIPS')
+unemploy_id_2008_map = ggplot(unemploy_id_2008)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno", direction = -1)+labs(title='Unemployment Rate in Idaho in 2008', fill='Unemployment Rate(%)')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+ggarrange(election_ca_2008_map, unemploy_ca_2008_map, election_co_2008_map, unemploy_co_2008_map, election_id_2008_map, unemploy_id_2008_map,
+          ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
+
+```
+
+
+
+
+## Year of 2012
+
+```{r fig2, fig.height = 30, fig.width = 25, fig.align = "center",echo=FALSE,warning=FALSE}
+# CA Election Vote
+election_ca_2012 = new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='CA') %>% filter(year=='2012') %>% filter(party=='democrat')
+election_ca_2012 = map_ca %>% left_join(election_ca_2012[,c('FIPS',"won_proportion")],by='FIPS') 
+election_ca_2012_map = ggplot(election_ca_2012) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in California in 2012', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CA Unemployment 
+unemploy_ca_2012=new_unemployment_data %>% filter(Stabr=='CA') %>% filter(year=='2012')
+unemploy_ca_2012=map_ca %>% left_join(unemploy_ca_2012, by='FIPS')
+unemploy_ca_2012_map = ggplot(unemploy_ca_2012)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno",direction = -1)+labs(title='Unemployment Rate in California in 2012', fill='Unemployment Rate(%)') + 
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CO Election Vote
+election_co_2012=new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='CO') %>% filter(year=='2012') %>% filter(party=='democrat')
+election_co_2012 = map_co %>% left_join(election_co_2012[,c('FIPS',"won_proportion")],by='FIPS') 
+election_co_2012_map = ggplot(election_co_2012) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in Colorado in 2012', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CO Unemployment 
+unemploy_co_2012=new_unemployment_data %>% filter(Stabr=='CO') %>% filter(year=='2012')
+unemploy_co_2012=map_co %>% left_join(unemploy_co_2012, by='FIPS')
+unemploy_co_2012_map = ggplot(unemploy_co_2012)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno",direction = -1)+labs(title='Unemployment Rate in Colorado in 2012', fill='Unemployment Rate(%)')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# ID Election Vote
+election_id_2012=new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='ID') %>% filter(year=='2012') %>% filter(party=='democrat')
+election_id_2012 = map_id %>% left_join(election_id_2012[,c('FIPS',"won_proportion")],by='FIPS') 
+election_id_2012_map = ggplot(election_id_2012) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in Idaho in 2012', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+# ID Unemployment 
+unemploy_id_2012=new_unemployment_data %>% filter(Stabr=='ID') %>% filter(year=='2012')
+unemploy_id_2012=map_id %>% left_join(unemploy_id_2012, by='FIPS')
+unemploy_id_2012_map = ggplot(unemploy_id_2012)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno", direction = -1)+labs(title='Unemployment Rate in Idaho in 2012', fill='Unemployment Rate(%)')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+ggarrange(election_ca_2012_map, unemploy_ca_2012_map, election_co_2012_map, unemploy_co_2012_map, election_id_2012_map, unemploy_id_2012_map,
+          ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
+
+```
+
+
+
+
+
+
+## Year of 2016
+
+```{r fig3, fig.height = 30, fig.width = 25, fig.align = "center" ,echo=FALSE,warning=FALSE}
+# CA Election Vote
+election_ca_2016 = new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='CA') %>% filter(year=='2016') %>% filter(party=='democrat')
+election_ca_2016 = map_ca %>% left_join(election_ca_2016[,c('FIPS',"won_proportion")],by='FIPS') 
+election_ca_2016_map = ggplot(election_ca_2016) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in California in 2016', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CA Unemployment 
+unemploy_ca_2016=new_unemployment_data %>% filter(Stabr=='CA') %>% filter(year=='2016')
+unemploy_ca_2016=map_ca %>% left_join(unemploy_ca_2016, by='FIPS')
+unemploy_ca_2016_map = ggplot(unemploy_ca_2016)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno",direction = -1)+labs(title='Unemployment Rate in California in 2016', fill='Unemployment Rate(%)') + 
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CO Election Vote
+election_co_2016=new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='CO') %>% filter(year=='2016') %>% filter(party=='democrat')
+election_co_2016 = map_co %>% left_join(election_co_2016[,c('FIPS',"won_proportion")],by='FIPS') 
+election_co_2016_map = ggplot(election_co_2016) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in Colorado in 2016', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+# CO Unemployment 
+unemploy_co_2016=new_unemployment_data %>% filter(Stabr=='CO') %>% filter(year=='2016')
+unemploy_co_2016=map_co %>% left_join(unemploy_co_2016, by='FIPS')
+unemploy_co_2016_map = ggplot(unemploy_co_2016)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno",direction = -1)+labs(title='Unemployment Rate in Colorado in 2016', fill='Unemployment Rate(%)')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+# ID Election Vote
+election_id_2016=new_election_data %>% select(c("year", "FIPS","state_po","party", "won_proportion"))%>% filter(state_po=='ID') %>% filter(year=='2016') %>% filter(party=='democrat')
+election_id_2016 = map_id %>% left_join(election_id_2016[,c('FIPS',"won_proportion")],by='FIPS') 
+election_id_2016_map = ggplot(election_id_2016) +geom_sf(aes(geometry=geometry,fill=won_proportion))+
+  scale_fill_viridis(option = "magma", direction = -1)+labs(title='Democrat Vote in Idaho in 2016', fill='Vote Proportion')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+# ID Unemployment 
+unemploy_id_2016=new_unemployment_data %>% filter(Stabr=='ID') %>% filter(year=='2016')
+unemploy_id_2016=map_id %>% left_join(unemploy_id_2016, by='FIPS')
+unemploy_id_2016_map = ggplot(unemploy_id_2016)+geom_sf(aes(geometry=geometry,fill = unemployment_rate))+
+  scale_fill_viridis_c(option = "inferno", direction = -1)+labs(title='Unemployment Rate in Idaho in 2016', fill='Unemployment Rate(%)')+
+  xlab('Longitude')+ylab('Latitude')+  theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.ticks = element_blank(), axis.title = element_blank())
+
+
+ggarrange(election_ca_2016_map, unemploy_ca_2016_map, election_co_2016_map, unemploy_co_2016_map, election_id_2016_map, unemploy_id_2016_map,
+          ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

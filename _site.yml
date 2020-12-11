@@ -1,9 +1,21 @@
 name: "my-website"
 output_dir: "docs"
 navbar:
-  title: "My Website"
+  title: "Chenxi Liu's Portfilo"                            
+  type: inverse
   left:
     - text: "Home"
       href: index.html
-    - text: "About"
-      href: about.html
+    - text: "Assignment 6"
+      href: geospatial.html
+    - text: "Assignment 7"
+      href: chenxi_liu_a7.html
+    - text: "Final Project"
+      href: FinalProject.html
+
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+      
+      

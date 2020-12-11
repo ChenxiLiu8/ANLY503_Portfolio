@@ -1,0 +1,2829 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>COVID-19 US Flight With Potential Contact</title>
+
+<meta property="og:title" content="COVID-19 US Flight With Potential Contact" />
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+
+<link rel="icon" href="data:image/x-icon;" type="image/x-icon">
+
+
+<script type="text/javascript">
+window.FlexDashboardComponents = [];
+</script>
+
+<script id="flexdashboard-navbar" type="application/json">
+[{"title":"Homepage","href":"index.html","align":"right"}]
+</script>
+<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<script src="site_libs/sly-1.6.1/sly.min.js"></script>
+<script src="site_libs/stickytableheaders-0.1.19/jquery.stickytableheaders.min.js"></script>
+<script src="site_libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="site_libs/leaflet-binding-2.0.3/leaflet.js"></script>
+<style type="text/css">
+
+/*
+ Dashboard CSS from Keen IO Dashboards
+ (https://github.com/keen/dashboards)
+*/
+
+body {
+  background: #f2f2f2;
+  padding: 60px 0 0 8px; /* padding-top overridden by theme */
+}
+
+body hr {
+  border-color: #d7d7d7;
+  margin: 10px 0;
+}
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar .navbar-brand {
+  text-decoration: none;
+}
+
+.navbar-logo {
+  margin-top: 1px;
+}
+
+.navbar-logo img {
+  margin-right: 12px;
+}
+
+.navbar-author {
+  margin-left: 10px;
+  font-size: 15px;
+}
+
+.navbar .dropdown-menu .fa {
+  min-width: 20px;
+}
+
+.navbar .dropdown-menu {
+  min-width: 150px;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.chart-wrapper,
+.nav-tabs-custom,
+.sbframe-commentary
+{
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+
+.chart-title {
+  border-bottom: 1px solid #d7d7d7;
+  color: #666;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 7px 10px 4px;
+}
+
+.chart-wrapper .chart-title:empty {
+  display: none;
+}
+
+.chart-wrapper .chart-stage {
+  overflow: hidden;
+  padding: 5px 10px;
+  position: relative;
+}
+
+.chart-wrapper .chart-notes {
+  background: #fbfbfb;
+  border-top: 1px solid #e2e2e2;
+  color: #808080;
+  font-size: 12px;
+  padding: 8px 10px 5px;
+}
+
+/*
+ CSS for handling flexbox layout
+*/
+
+#dashboard-container {
+  visibility: hidden;
+}
+
+.tab-content>.dashboard-page-wrapper.active {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.dashboard-page-wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.dashboard-row-orientation {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.dashboard-row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.dashboard-row-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.dashboard-column-orientation {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.dashboard-column {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.chart-wrapper-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.chart-stage-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+}
+
+.chart-shim {
+  position: absolute;
+  left: 8px; top: 8px; right: 8px; bottom: 8px;
+}
+
+.no-padding .chart-shim {
+  left: 0; top: 0; right: 0; bottom: 0;
+}
+
+.flowing-content-shim {
+  overflow: auto;
+  left: 0; top: 0; right: 0; bottom: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.flowing-content-container {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.chart-stage .table-bordered {
+  border: none;
+}
+
+.chart-stage .table-bordered > tbody > tr > th,
+.chart-stage .table-bordered > tfoot > tr > th,
+.chart-stage .table-bordered > tbody > tr > td,
+.chart-stage .table-bordered > tfoot > tr > td {
+  border: none;
+}
+
+.chart-stage .table-bordered > tbody > tr > td {
+  border-top: 1px solid #dddddd;
+}
+
+.chart-stage .table-bordered > thead > tr > th {
+  border: none;
+  border-bottom: 2px solid #dddddd;
+}
+
+.bootstrap-table table>thead {
+  background-color: #fff;
+}
+
+.bootstrap-table table.data,
+.bootstrap-table table.shiny-table {
+  width: inherit !important;
+}
+
+.bootstrap-table table.data>tbody>tr>th,
+.bootstrap-table table.shiny-table>tbody>tr>th {
+  border-top: none;
+  border-bottom: 2px solid #dddddd;
+  padding: 5px;
+}
+
+.bootstrap-table .data td[align=right] {
+  font-family: inherit;
+}
+
+.chart-wrapper form {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.shiny-input-container label {
+  font-weight: normal;
+}
+
+.chart-stage .html-widget {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-stage .html-widget-static-bound {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-stage .shiny-bound-output {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Omit display of empty paragraphs */
+
+.chart-shim>p:empty {
+  display: none;
+}
+
+.chart-stage>p:empty {
+  display: none;
+}
+
+/* Omit display of special knitr options div*/
+
+.chart-stage .knitr-options {
+  display: none;
+}
+
+/* Automatically resizing images */
+
+.image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+.image-container img {
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Value box */
+
+.value-box {
+  border-radius: 2px;
+  position: relative;
+  display: block;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.value-box > .inner {
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.value-box .value {
+  font-size: 38px;
+  font-weight: bold;
+  margin: 0 0 3px 0;
+  white-space: nowrap;
+  padding: 0;
+}
+
+.value-box .caption {
+  font-size: 15px;
+}
+.value-box .caption > small {
+  display: block;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.value-box .icon i {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 80px;
+  color: rgba(0, 0, 0, 0.15);
+}
+
+.linked-value:hover {
+  cursor: pointer;
+}
+
+.value-box.linked-value:hover {
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* STORYBOARD */
+
+.storyboard-nav button {
+  background: transparent;
+  border: 0;
+  opacity: .3;
+  outline: none;
+  padding: 0;
+}
+
+.storyboard-nav button:hover,
+.storyboard-nav button:hover {
+  opacity: .5;
+}
+
+.storyboard-nav button:disabled,
+.storyboard-nav button:disabled {
+  opacity: .1;
+}
+
+.storyboard-nav .sbnext,
+.storyboard-nav .sbprev {
+  float: left;
+  width: 2%;
+  height: 120px;
+  font-size: 50px;
+}
+
+.storyboard-nav .sbprev {
+  text-align: left;
+  width: 2%;
+}
+
+.storyboard-nav .sbnext {
+  float: right;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.storyboard-nav .sbframelist {
+  margin: 0 auto;
+  width: 94%;
+  height: 120px;
+  overflow: hidden;
+  text-shadow: none;
+  margin-bottom: 8px;
+}
+
+.storyboard-nav .sbframelist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.storyboard-nav .sbframelist ul li {
+  float: left;
+  width: 270px;
+  height: 100%;
+  padding: 10px 10px 10px 10px;
+  margin-right: 8px;
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  color: #3a3c47;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.storyboard-nav .sbframelist ul li:last-child {
+  margin-right: 0px;
+}
+
+.storyboard-nav .sbframelist ul li.active {
+  color: #fff;
+  background: #B8B8B8;
+}
+
+.sbframe-commentary {
+  width: 300px;
+  background: #fbfbfb;
+  font-size: 14px;
+}
+
+.sbframe-commentary ul {
+  padding-left: 22px;
+}
+
+.sbframe.active {
+  display: flex;
+}
+
+.sbframe:not(.active) {
+  display: none;
+}
+
+/* NAV TABS */
+
+.nav-tabs-custom > .nav-tabs {
+  margin: 0;
+  border-bottom: 1px solid #d7d7d7;
+  color: #666;
+  font-size: 14px;
+  font-weight: 300;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.nav-tabs-custom > .nav-tabs > li {
+  border-top: 3px solid transparent;
+  margin-bottom: -1px;
+  margin-right: 5px;
+}
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:active {
+  color: #666;
+  font-weight: 300;
+  font-size: 14px;
+  border-radius: 0;
+  padding: 3px 10px 5px;
+  text-transform: none;
+}
+
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a {
+  border-bottom-color: transparent;
+}
+
+.nav-tabs-custom > .nav-tabs > li > a.text-muted {
+  color: #999;
+}
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+  background: transparent;
+  margin: 0;
+}
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+  color: #999;
+}
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
+  border-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: #3c8dbc;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a,
+.nav-tabs-custom > .nav-tabs > li.active:hover > a {
+  background-color: #fff;
+  color: #666;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a {
+  border-top-color: transparent;
+  border-left-color: #d7d7d7;
+  border-right-color: #d7d7d7;
+}
+.nav-tabs-custom > .nav-tabs > li:first-of-type {
+  margin-left: 0;
+}
+.nav-tabs-custom > .nav-tabs > li:first-of-type.active > a {
+  border-left-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs.pull-right {
+  float: none !important;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li {
+  float: right;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type {
+  margin-right: 0;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type > a {
+  border-left-width: 1px;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type.active > a {
+  border-left-color: #d7d7d7;
+  border-right-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs > li.header {
+  line-height: 35px;
+  padding: 0 10px;
+  font-size: 20px;
+  color: #666;
+}
+.nav-tabs-custom > .nav-tabs > li.header > .fa,
+.nav-tabs-custom > .nav-tabs > li.header > .glyphicon,
+.nav-tabs-custom > .nav-tabs > li.header > .ion {
+  margin-right: 5px;
+}
+.nav-tabs-custom > .tab-content {
+  background: #fff;
+  padding: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.nav-tabs-custom > .tab-content > .chart-wrapper {
+  background: #fff;
+  border: none;
+  margin: 0;
+}
+
+
+.nav-tabs-custom > .tab-content > .active {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.nav-tabs-custom .dropdown.open > a:active,
+.nav-tabs-custom .dropdown.open > a:focus {
+  background: transparent;
+  color: #999;
+}
+
+
+@media (max-width: 767px) {
+  .value-box {
+    text-align: center;
+    margin-right: 8px;
+  }
+  .value-box .icon {
+    display: none;
+  }
+}
+
+/* Fixed position sidebar */
+
+.section.sidebar {
+  position: fixed;
+  top: 51px; /* overridden by theme */
+  left: 0;
+  bottom: 0;
+  border-right: 1px solid #e2e2e2;
+  background-color: white; /* overridden by theme */
+  padding-left: 10px;
+  padding-right: 10px;
+  visibility: hidden;
+  overflow: auto;
+}
+
+.section.sidebar form p:first-child {
+  margin-top: 10px;
+}
+
+/* Embedded source code */
+
+#flexdashboard-source-code {
+  display: none;
+}
+
+.featherlight-content #flexdashboard-source-code {
+  display: inline-block;
+}
+
+.featherlight-content {
+  width: 80%;
+  max-width: 800px;
+  padding: 0 !important;
+  border-bottom: none !important;
+}
+
+.featherlight:last-of-type {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.featherlight-inner {
+  width: 100%;
+}
+
+.featherlight-content pre {
+  margin: 0;
+  border: 0;
+  background: #fff;
+  font-size: 12px;
+}
+
+.unselectable {
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+#flexdashboard-source-code code {
+  -ms-user-select: text;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -o-user-select: text;
+  user-select: text;
+}
+
+/* DataTables Tweaks */
+
+.dataTables_filter input[type="search"] {
+  -webkit-appearance: searchfield;
+  outline: none;
+}
+
+.dataTables_wrapper.no-footer
+.dataTables_info {
+  padding-top: 0;
+}
+
+
+table.dataTable thead th {
+  border-bottom: 1px solid #d7d7d7;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border-bottom: 1px solid #d7d7d7;
+}
+
+/* Mobile phone only CSS */
+
+.desktop-layout div.section.mobile {
+  display: none;
+}
+
+.mobile-layout div.section.no-mobile {
+  display: none;
+}
+
+.mobile-figure {
+  display: none;
+}
+
+
+
+body {
+  padding-top: 60px;
+}
+
+.section.sidebar {
+  top: 51px;
+  background-color: rgba(39, 128, 227, 0.1);
+}
+
+.value-box {
+  color: #f9f9f9;
+}
+
+.bg-primary {
+  background-color: rgba(39, 128, 227, 0.7);
+}
+
+.storyboard-nav .sbframelist ul li.active {
+  background-color: rgba(39, 128, 227, 0.7);
+}
+
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: rgba(39, 128, 227, 0.7);
+}
+
+.bg-info {
+  background-color: rgba(153, 84, 187, 0.7);
+}
+
+.bg-warning {
+  background-color: rgba(255, 117, 24, 0.7);
+}
+
+.bg-danger {
+  background-color: rgba(255, 0, 57, 0.7);
+}
+
+.bg-success {
+  background-color: rgba(63, 182, 24, 0.7);
+}
+
+.chart-title {
+  font-weight: 500;
+}
+
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:active {
+  font-weight: 500;
+}
+
+@media only screen and (min-width: 768px) {
+html, body {
+  height: 100%;
+}
+
+#dashboard-container {
+  height: 100%;
+}
+}
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+
+<button id="navbar-button" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+
+<span class="navbar-logo pull-left">
+  
+</span>
+<span class="navbar-brand">
+  COVID-19 US Flight With Potential Contact
+  <span class="navbar-author">
+        </span>
+</span>
+
+</div>
+<div id="navbar" class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-left">
+</ul>
+<ul class="nav navbar-nav navbar-right">
+</ul>
+</div><!--/.nav-collapse-->
+</div><!--/.container-->
+</div><!--/.navbar-->
+
+<img class="mobile-figure" data-mobile-figure-id=fig1 src="FinalProject_files/figure-html/unnamed-chunk-1-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig2 src="FinalProject_files/figure-html/unnamed-chunk-2-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig3 src="FinalProject_files/figure-html/unnamed-chunk-3-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig4 src="FinalProject_files/figure-html/unnamed-chunk-4-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig5 src="FinalProject_files/figure-html/unnamed-chunk-5-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig6 src="FinalProject_files/figure-html/unnamed-chunk-6-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig7 src="FinalProject_files/figure-html/unnamed-chunk-8-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig8 src="FinalProject_files/figure-html/unnamed-chunk-9-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig9 src="FinalProject_files/figure-html/unnamed-chunk-10-1.mb.png" />
+<script type="text/javascript">
+
+
+var FlexDashboard = (function () {
+
+  // initialize options
+  var _options = {};
+
+  var FlexDashboard = function() {
+
+    // default options
+    _options = $.extend(_options, {
+      theme: "cosmo",
+      fillPage: false,
+      orientation: 'columns',
+      storyboard: false,
+      defaultFigWidth: 576,
+      defaultFigHeight: 461,
+      defaultFigWidthMobile: 360,
+      defaultFigHeightMobile: 461,
+      isMobile: false,
+      isPortrait: false,
+      resize_reload: true
+    });
+  };
+
+  function init(options) {
+
+    // extend default options
+    $.extend(true, _options, options);
+
+    // add ids to sections that don't have them (pandoc won't assign ids
+    // to e.g. sections with titles consisting of only chinese characters)
+    var nextId = 1;
+    $('.level1:not([id]),.level2:not([id]),.level3:not([id])').each(function() {
+      $(this).attr('id', 'dashboard-' + nextId++);
+    });
+
+    // find navbar items
+    var navbarItems = $('#flexdashboard-navbar');
+    if (navbarItems.length)
+      navbarItems = JSON.parse(navbarItems.html());
+    addNavbarItems(navbarItems);
+
+    // find the main dashboard container
+    var dashboardContainer = $('#dashboard-container');
+
+    // resolve mobile classes
+    resolveMobileClasses(dashboardContainer);
+
+    // one time global initialization for components
+    componentsInit(dashboardContainer);
+
+    // look for a global sidebar
+    var globalSidebar = dashboardContainer.find(".section.level1.sidebar");
+    if (globalSidebar.length > 0) {
+
+      // global layout for fullscreen displays
+      if (!isMobilePhone()) {
+
+         // hoist it up to the top level
+         globalSidebar.insertBefore(dashboardContainer);
+
+         // lay it out (set width/positions)
+         layoutSidebar(globalSidebar, dashboardContainer);
+
+      // tuck sidebar into first page for mobile phones
+      } else {
+
+        // convert it into a level3 section
+        globalSidebar.removeClass('sidebar');
+        globalSidebar.removeClass('level1');
+        globalSidebar.addClass('level3');
+        var h1 = globalSidebar.children('h1');
+        var h3 = $('<h3></h3>');
+        h3.append(h1.contents());
+        h3.insertBefore(h1);
+        h1.detach();
+
+        // move it into the first page
+        var page = dashboardContainer.find('.section.level1').first();
+        if (page.length > 0)
+          page.prepend(globalSidebar);
+      }
+    }
+
+    // look for pages to layout
+    var pages = $('div.section.level1');
+    if (pages.length > 0) {
+
+        // find the navbar and collapse on clicked
+        var navbar = $('#navbar');
+        navbar.on("click", "a[data-toggle!=dropdown]", null, function () {
+           navbar.collapse('hide');
+        });
+
+        // envelop the dashboard container in a tab content div
+        dashboardContainer.wrapInner('<div class="tab-content"></div>');
+
+        pages.each(function(index) {
+
+          // lay it out
+          layoutDashboardPage($(this));
+
+          // add it to the navbar
+          addToNavbar($(this), index === 0);
+
+        });
+
+    } else {
+
+      // remove the navbar and navbar button if we don't
+      // have any navbuttons
+      if (navbarItems.length === 0) {
+        $('#navbar').remove();
+        $('#navbar-button').remove();
+      }
+
+      // add the storyboard class if requested
+      if (_options.storyboard)
+        dashboardContainer.addClass('storyboard');
+
+      // layout the entire page
+      layoutDashboardPage(dashboardContainer);
+    }
+
+    // if we are in shiny we need to trigger a window resize event to
+    // force correct layout of shiny-bound-output elements
+    if (isShinyDoc())
+      $(window).trigger('resize');
+
+    // make main components visible
+    $('.section.sidebar').css('visibility', 'visible');
+    dashboardContainer.css('visibility', 'visible');
+
+    // handle location hash
+    handleLocationHash();
+
+    // intialize prism highlighting
+    initPrismHighlighting();
+
+    // record mobile and orientation state then register a handler
+    // to refresh if resize_reload is set to true and it changes
+    _options.isMobile = isMobilePhone();
+    _options.isPortrait = isPortrait();
+    if (_options.resize_reload) {
+      $(window).on('resize', function() {
+        if (_options.isMobile !== isMobilePhone() ||
+            _options.isPortrait !== isPortrait()) {
+          window.location.reload();
+        }
+      });
+    } else {
+      // if in desktop mode and resizing to mobile, make sure the heights are 100%
+      // This enforces what `fillpage.css` does for "wider" pages.
+      // Since we are not reloading once the page becomes small, we need to force the height to 100%
+      // This is a new situation introduced when `_options.resize_reload` is `false`
+      if (! _options.isMobile) {
+        // only add if `fillpage.css` was added in the first place
+        if (_options.fillPage) {
+          // fillpage.css
+          $("html,body,#dashboard").css("height", "100%");
+        }
+      }
+    }
+    // trigger layoutcomplete event
+    dashboardContainer.trigger('flexdashboard:layoutcomplete');
+  }
+
+  function resolveMobileClasses(dashboardContainer) {
+     // add top level layout class
+    dashboardContainer.addClass(isMobilePhone() ? 'mobile-layout' :
+                                                  'desktop-layout');
+
+    // look for .mobile sections and add .no-mobile to their peers
+    var mobileSections = $('.section.mobile');
+    mobileSections.each(function() {
+       var id = $(this).attr('id');
+       var nomobileId = id.replace(/-\d+$/, '');
+       $('#' + nomobileId).addClass('no-mobile');
+    });
+  }
+
+  function addNavbarItems(navbarItems) {
+
+    var navbarLeft = $('ul.navbar-left');
+    var navbarRight = $('ul.navbar-right');
+
+    for (var i = 0; i<navbarItems.length; i++) {
+
+      // get the item
+      var item = navbarItems[i];
+
+      // determine the container
+      var container = null;
+      if (item.align === "left")
+        container = navbarLeft;
+      else
+        container = navbarRight;
+
+      // navbar menu if we have multiple items
+      if (item.items) {
+        var menu = navbarMenu(null, item.icon, item.title, container);
+        for (var j = 0; j<item.items.length; j++) {
+          var subItem = item.items[j];
+          var li = $('<li></li>');
+          li.append(navbarLink(subItem.icon, subItem.title, subItem.href, subItem.target));
+          menu.append(li);
+        }
+      } else {
+        var li = $('<li></li>');
+        li.append(navbarLink(item.icon, item.title, item.href, item.target));
+        container.append(li);
+      }
+    }
+  }
+
+  // create or get a reference to an existing dropdown menu
+  function navbarMenu(id, icon, title, container) {
+    var existingMenu = [];
+    if (id)
+      existingMenu = container.children('#' + id);
+    if (existingMenu.length > 0) {
+      return existingMenu.children('ul');
+    } else {
+      var li = $('<li></li>');
+      if (id)
+        li.attr('id', id);
+      li.addClass('dropdown');
+      // auto add "Share" title on mobile if necessary
+      if (!title && icon && (icon === "fa-share-alt") && isMobilePhone())
+        title = "Share";
+      if (title) {
+        title = title + ' <span class="caret"></span>';
+      }
+      var a = navbarLink(icon, title, "#");
+      a.addClass('dropdown-toggle');
+      a.attr('data-toggle', 'dropdown');
+      a.attr('role', 'button');
+      a.attr('aria-expanded', 'false');
+      li.append(a);
+      var ul = $('<ul class="dropdown-menu"></ul>');
+      ul.attr('role', 'menu');
+      li.append(ul);
+      container.append(li);
+      return ul;
+    }
+  }
+
+  function addToNavbar(page, active) {
+
+    // capture the id and data-icon attribute (if any)
+    var id = page.attr('id');
+    var icon = page.attr('data-icon');
+    var navmenu = page.attr('data-navmenu');
+
+    // get hidden state (transfer this to navbar)
+    var hidden = page.hasClass('hidden');
+    page.removeClass('hidden');
+
+    // sanitize the id for use with bootstrap tabs
+    id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+    page.attr('id', id);
+
+    // get the wrapper
+    var wrapper = page.closest('.dashboard-page-wrapper');
+
+    // move the id to the wrapper
+    page.removeAttr('id');
+    wrapper.attr('id', id);
+
+    // add the tab-pane class to the wrapper
+    wrapper.addClass('tab-pane');
+    if (active)
+      wrapper.addClass('active');
+
+    // get a reference to the h1, discover its inner contens, then detach it
+    var h1 = wrapper.find('h1').first();
+    var title = h1.contents();
+    h1.detach();
+
+    // create a navbar item
+    var li = $('<li></li>');
+    var a = navbarLink(icon, title, '#' + id);
+    a.attr('data-toggle', 'tab');
+    li.append(a);
+
+    // add it to the navbar (or navbar menu if specified)
+    var container = $('ul.navbar-left');
+    if (navmenu) {
+      var menuId = navmenu.replace(/\s+/g, '');
+      var menu = navbarMenu(menuId, null, navmenu, container);
+      menu.append(li);
+    } else {
+      container.append(li);
+    }
+
+    // hide it if requested
+    if (hidden)
+      li.addClass('hidden');
+  }
+
+  function navbarLink(icon, title, href, target) {
+
+    var a = $('<a></a>');
+    if (icon) {
+
+      // get the name of the icon set and icon
+      var dashPos = icon.indexOf("-");
+      var iconSet = null;
+      var iconSplit = icon.split(" ");
+      if (iconSplit.length > 1) {
+        iconSet = iconSplit[0];
+        icon = iconSplit.slice(1).join(" ");
+      } else {
+        iconSet = icon.substring(0, dashPos);
+      }
+      var iconName = icon.substring(dashPos + 1);
+
+      // create the icon
+      var iconElement = $('<span class="' + iconSet + ' ' + icon + '"></span>');
+      if (title)
+        iconElement.css('margin-right', '7px');
+      a.append(iconElement);
+      // if href is null see if we can auto-generate based on icon (e.g. social)
+      if (!href)
+        maybeGenerateLinkFromIcon(iconName, a);
+    }
+    if (title)
+      a.append(title);
+
+    // add the href.
+    if (href) {
+      if (href === "source_embed") {
+        a.attr('href', '#');
+        a.attr('data-featherlight', "#flexdashboard-source-code");
+        a.featherlight({
+            beforeOpen: function(event){
+              $('body').addClass('unselectable');
+            },
+            afterClose: function(event){
+              $('body').removeClass('unselectable');
+            }
+        });
+      } else {
+        a.attr('href', href);
+      }
+    }
+
+    // add the arget
+    if (target)
+      a.attr('target', target);
+
+    return a;
+  }
+
+  // auto generate a link from an icon name (e.g. twitter) when possible
+  function maybeGenerateLinkFromIcon(iconName, a) {
+
+     var serviceLinks = {
+      "twitter": "https://twitter.com/share?text=" + encodeURIComponent(document.title) + "&url="+encodeURIComponent(location.href),
+      "facebook": "https://www.facebook.com/sharer/sharer.php?s=100&p[url]="+encodeURIComponent(location.href),
+      "google-plus": "https://plus.google.com/share?url="+encodeURIComponent(location.href),
+      "linkedin": "https://www.linkedin.com/shareArticle?mini=true&url="+encodeURIComponent(location.href) + "&title=" + encodeURIComponent(document.title),
+      "pinterest": "https://pinterest.com/pin/create/link/?url="+encodeURIComponent(location.href) + "&description=" + encodeURIComponent(document.title)
+    };
+
+    var makeSocialLink = function(a, href) {
+      a.attr('href', '#');
+      a.on('click', function(e) {
+        e.preventDefault();
+        window.open(href);
+      });
+    };
+
+    $.each(serviceLinks, function(key, value) {
+      if (iconName.indexOf(key) !== -1)
+        makeSocialLink(a, value);
+    });
+  }
+
+  // layout a dashboard page
+  function layoutDashboardPage(page) {
+
+    // use a page wrapper so that free form content above the
+    // dashboard appears at the top rather than the side (as it
+    // would without the wrapper in a column orientation)
+    var wrapper = $('<div class="dashboard-page-wrapper"></div>');
+    page.wrap(wrapper);
+
+    // if there are no level2 or level3 headers synthesize a level3
+    // header to contain the (e.g. frame it, scroll container, etc.)
+    var headers = page.find('h2,h3');
+    if (headers.length === 0)
+      page.wrapInner('<div class="section level3"></div>');
+
+    // hoist up any content before level 2 or level 3 headers
+    var children = page.children();
+    children.each(function(index) {
+      if ($(this).hasClass('level2') || $(this).hasClass('level3'))
+        return false;
+      $(this).insertBefore(page);
+    });
+
+    // determine orientation and fillPage behavior for distinct media
+    var orientation, fillPage, storyboard;
+
+    // media: mobile phone
+    if (isMobilePhone()) {
+
+      // if there is a sidebar we need to ensure it's content
+      // is properly framed as an h3
+      var sidebar = page.find('.section.sidebar');
+      sidebar.removeClass('sidebar');
+      sidebar.wrapInner('<div class="section level3"></div>');
+      var h2 = sidebar.find('h2');
+      var h3 = $('<h3></h3>');
+      h3.append(h2.contents());
+      h3.insertBefore(h2);
+      h2.detach();
+
+      // wipeout h2 elements then enclose them in a single h2
+      var level2 = page.find('div.section.level2');
+      level2.each(function() {
+        level2.children('h2').remove();
+        level2.children().unwrap();
+      });
+      page.wrapInner('<div class="section level2"></div>');
+
+      // substitute mobile images
+      if (isPortrait()) {
+        var mobileFigures = $('img.mobile-figure');
+        mobileFigures.each(function() {
+          // get the src (might be base64 encoded)
+          var src = $(this).attr('src');
+
+          // find it's peer
+          var id = $(this).attr('data-mobile-figure-id');
+          var img = $('img[data-figure-id=' + id + "]");
+          img.attr('src', src)
+             .attr('width', _options.defaultFigWidthMobile)
+             .attr('height', _options.defaultFigHeightMobile);
+        });
+      }
+
+      // hoist storyboard commentary into it's own section
+      if (page.hasClass('storyboard')) {
+        var commentaryHR = page.find('div.section.level3 hr');
+        commentaryHR.each(function() {
+          var commentary = $(this).nextAll().detach();
+          var commentarySection = $('<div class="section level3"></div>');
+          commentarySection.append(commentary);
+          commentarySection.insertAfter($(this).closest('div.section.level3'));
+          $(this).remove();
+        });
+      }
+
+      // force a non full screen layout by columns
+      orientation = _options.orientation = 'columns';
+      fillPage = _options.fillPage = false;
+      storyboard = _options.storyboard = false;
+
+    // media: desktop
+    } else {
+
+      // determine orientation
+      orientation = page.attr('data-orientation');
+      if (orientation !== 'rows' && orientation != 'columns')
+        orientation = _options.orientation;
+
+      // determine storyboard mode
+      storyboard = page.hasClass('storyboard');
+
+      // fillPage based on options (force for storyboard)
+      fillPage = _options.fillPage || storyboard;
+
+      // handle sidebar
+      var sidebar = page.find('.section.level2.sidebar');
+      if (sidebar.length > 0)
+        layoutSidebar(sidebar, page);
+    }
+
+    // give it and it's parent divs height: 100% if we are in fillPage mode
+    if (fillPage) {
+      page.addClass('vertical-layout-fill');
+      page.css('height', '100%');
+      page.parents('div').css('height', '100%');
+    } else {
+      page.addClass('vertical-layout-scroll');
+    }
+
+    // perform the layout
+    if (storyboard)
+      layoutPageAsStoryboard(page);
+    else if (orientation === 'rows')
+      layoutPageByRows(page, fillPage);
+    else if (orientation === 'columns')
+      layoutPageByColumns(page, fillPage);
+  }
+
+  function layoutSidebar(sidebar, content) {
+
+    // get it out of the header hierarchy
+    sidebar = sidebar.first();
+    if (sidebar.hasClass('level1')) {
+      sidebar.removeClass('level1');
+      sidebar.children('h1').remove();
+    } else if (sidebar.hasClass('level2')) {
+      sidebar.removeClass('level2');
+      sidebar.children('h2').remove();
+    }
+
+    // determine width
+    var sidebarWidth = isTablet() ? 220 : 250;
+    var dataWidth = parseInt(sidebar.attr('data-width'));
+    if (dataWidth)
+      sidebarWidth = dataWidth;
+
+    // set the width and shift the page right to accomodate the sidebar
+    sidebar.css('width', sidebarWidth + 'px');
+    content.css('padding-left', sidebarWidth + 'px');
+
+    // wrap it's contents in a form
+    sidebar.wrapInner($('<form></form>'));
+  }
+
+  function layoutPageAsStoryboard(page) {
+
+    // create storyboard navigation
+    var nav = $('<div class="storyboard-nav"></div>');
+
+    // add navigation buttons
+    var prev = $('<button class="sbprev"><i class="fa fa-angle-left"></i></button>');
+    nav.append(prev);
+    var next= $('<button class="sbnext"><i class="fa fa-angle-right"></i></button>');
+    nav.append(next);
+
+    // add navigation frame
+    var frameList = $('<div class="sbframelist"></div>');
+    nav.append(frameList);
+    var ul = $('<ul></ul>');
+    frameList.append(ul);
+
+     // find all the level3 sections (those are the storyboard frames)
+    var frames = page.find('div.section.level3');
+    frames.each(function() {
+
+      // mark it
+      $(this).addClass('sbframe');
+
+      // divide it into chart content and (optional) commentary
+      $(this).addClass('dashboard-column-orientation');
+
+      // stuff the chart into it's own div w/ flex
+      $(this).wrapInner('<div class="sbframe-component"></div>');
+      setFlex($(this), 1);
+      var frame = $(this).children('.sbframe-component');
+
+      // extract the title from the h3
+      var li = $('<li></li>');
+      var h3 = frame.children('h3');
+      li.append(h3.contents());
+      h3.detach();
+      ul.append(li);
+
+      // extract commentary
+      var hr = frame.children('hr');
+      if (hr.length) {
+        var commentary = hr.nextAll().detach();
+        hr.remove();
+        var commentaryFrame = $('<div class="sbframe-commentary"></div>');
+        commentaryFrame.addClass('flowing-content-shim');
+        commentaryFrame.addClass('flowing-content-container');
+        commentaryFrame.append(commentary);
+        $(this).append(commentaryFrame);
+
+        // look for a data-commentary-width attribute
+        var commentaryWidth = $(this).attr('data-commentary-width');
+        if (commentaryWidth)
+          commentaryFrame.css('width', commentaryWidth + 'px');
+      }
+
+      // layout the chart (force flex)
+      var result = layoutChart(frame, true);
+
+      // ice the notes if there are none
+      if (!result.notes)
+        frame.find('.chart-notes').remove();
+
+      // set flex on chart
+      setFlex(frame, 1);
+    });
+
+    // create a div to hold all the frames
+    var frameContent = $('<div class="sbframe-content"></div>');
+    frameContent.addClass('dashboard-row-orientation');
+    frameContent.append(frames.detach());
+
+    // row orientation to stack nav and frame content
+    page.addClass('dashboard-row-orientation');
+    page.append(nav);
+    page.append(frameContent);
+    setFlex(frameContent, 1);
+
+    // initialize sly
+    var sly = new Sly(frameList, {
+    		horizontal: true,
+    		itemNav: 'basic',
+    		smart: true,
+    		activateOn: 'click',
+    		startAt: 0,
+    		scrollBy: 1,
+    		activatePageOn: 'click',
+    		speed: 200,
+    		moveBy: 600,
+    		dragHandle: true,
+    		dynamicHandle: true,
+    		clickBar: true,
+    		keyboardNavBy: 'items',
+    		next: next,
+    		prev: prev
+    	}).init();
+
+    // make first frame active
+    frames.removeClass('active');
+    frames.first().addClass('active');
+
+    // subscribe to frame changed events
+    sly.on('active', function (eventName, itemIndex) {
+      frames.removeClass('active');
+      frames.eq(itemIndex).addClass('active')
+                          .trigger('shown');
+    });
+  }
+
+  function layoutPageByRows(page, fillPage) {
+
+    // row orientation
+    page.addClass('dashboard-row-orientation');
+
+    // find all the level2 sections (those are the rows)
+    var rows = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (rows.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      rows = page.find('div.section.level2');
+    }
+
+    rows.each(function () {
+
+      // flags
+      var haveNotes = false;
+      var haveFlexHeight = true;
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // give it row layout semantics if it's not a tabset
+      if (!isTabset)
+        $(this).addClass('dashboard-row');
+
+      // find all of the level 3 subheads
+      var columns = $(this).find('div.section.level3');
+
+      // determine figureSizes sizes
+      var figureSizes = chartFigureSizes(columns);
+
+      // fixup the columns
+      columns.each(function(index) {
+
+        // layout the chart (force flex if we are in a tabset)
+        var result = layoutChart($(this), isTabset);
+
+        // update flexHeight state
+        if (!result.flex)
+          haveFlexHeight = false;
+
+        // update state
+        if (result.notes)
+          haveNotes = true;
+
+        // set the column flex based on the figure width
+        // (value boxes will just get the default figure width)
+        var chartWidth = figureSizes[index].width;
+        setFlex($(this), chartWidth + ' ' + chartWidth + ' 0px');
+
+      });
+
+      // remove empty chart note divs
+      if (isTabset)
+        $(this).find('.chart-notes').filter(function() {
+            return $(this).html() === "&nbsp;";
+        }).remove();
+      if (!haveNotes)
+        $(this).find('.chart-notes').remove();
+
+       // make it a flexbox row
+      if (haveFlexHeight)
+        $(this).addClass('dashboard-row-flex');
+
+      // now we can set the height on all the wrappers (based on maximum
+      // figure height + room for title and notes, or data-height on the
+      // container if specified). However, don't do this if there is
+      // no flex on any of the constituent columns
+      var flexHeight = null;
+      var dataHeight = parseInt($(this).attr('data-height'));
+      if (dataHeight)
+        flexHeight = adjustedHeight(dataHeight, columns.first());
+      else if (haveFlexHeight)
+        flexHeight = maxChartHeight(figureSizes, columns);
+      if (flexHeight) {
+        if (fillPage)
+          setFlex($(this), flexHeight + ' ' + flexHeight + ' 0px');
+        else {
+          $(this).css('height', flexHeight + 'px');
+          setFlex($(this), '0 0 ' + flexHeight + 'px');
+        }
+      }
+
+    });
+  }
+
+  function layoutPageByColumns(page, fillPage) {
+
+    // column orientation
+    page.addClass('dashboard-column-orientation');
+
+    // find all the level2 sections (those are the columns)
+    var columns = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (columns.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      columns = page.find('div.section.level2');
+    }
+
+    // layout each column
+    columns.each(function (index) {
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // make it a flexbox column
+      $(this).addClass('dashboard-column');
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // find all the h3 elements
+      var rows = $(this).find('div.section.level3');
+
+      // get the figure sizes for the rows
+      var figureSizes = chartFigureSizes(rows);
+
+      // column flex is the max row width (or data-width if specified)
+      var flexWidth;
+      var dataWidth = parseInt($(this).attr('data-width'));
+      if (dataWidth)
+        flexWidth = dataWidth;
+      else
+        flexWidth = maxChartWidth(figureSizes);
+      setFlex($(this), flexWidth + ' ' + flexWidth + ' 0px');
+
+      // layout each chart
+      rows.each(function(index) {
+
+        // perform the layout
+        var result = layoutChart($(this), false);
+
+        // ice the notes if there are none
+        if (!result.notes)
+          $(this).find('.chart-notes').remove();
+
+        // set flex height based on figHeight, then adjust
+        if (result.flex) {
+          var chartHeight = figureSizes[index].height;
+          chartHeight = adjustedHeight(chartHeight, $(this));
+          if (fillPage)
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' 0px');
+          else {
+            $(this).css('height', chartHeight + 'px');
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' ' + chartHeight + 'px');
+          }
+        }
+      });
+    });
+  }
+
+  function chartFigureSizes(charts) {
+
+    // sizes
+    var figureSizes = new Array(charts.length);
+
+    // check each chart
+    charts.each(function(index) {
+
+      // start with default
+      figureSizes[index] = {
+        width: _options.defaultFigWidth,
+        height: _options.defaultFigHeight
+      };
+
+      // look for data-height or data-width then knit options
+      var dataWidth = parseInt($(this).attr('data-width'));
+      var dataHeight = parseInt($(this).attr('data-height'));
+      var knitrOptions = $(this).find('.knitr-options:first');
+      var knitrWidth, knitrHeight;
+      if (knitrOptions) {
+        knitrWidth = parseInt(knitrOptions.attr('data-fig-width'));
+        knitrHeight =  parseInt(knitrOptions.attr('data-fig-height'));
+      }
+
+      // width
+      if (dataWidth)
+        figureSizes[index].width = dataWidth;
+      else if (knitrWidth)
+        figureSizes[index].width = knitrWidth;
+
+      // height
+      if (dataHeight)
+        figureSizes[index].height = dataHeight;
+      else if (knitrHeight)
+        figureSizes[index].height = knitrHeight;
+    });
+
+    // return sizes
+    return figureSizes;
+  }
+
+  function maxChartHeight(figureSizes, charts) {
+
+    // first compute the maximum height
+    var maxHeight = _options.defaultFigHeight;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].height > maxHeight)
+        maxHeight = figureSizes[i].height;
+
+    // now add offests for chart title and chart notes
+    if (charts.length)
+      maxHeight = adjustedHeight(maxHeight, charts.first());
+
+    return maxHeight;
+  }
+
+  function adjustedHeight(height, chart) {
+    if (chart.length > 0) {
+      var chartTitle = chart.find('.chart-title');
+      if (chartTitle.length)
+        height += chartTitle.first().outerHeight();
+      var chartNotes = chart.find('.chart-notes');
+      if (chartNotes.length)
+        height += chartNotes.first().outerHeight();
+    }
+    return height;
+  }
+
+  function maxChartWidth(figureSizes) {
+    var maxWidth = _options.defaultFigWidth;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].width > maxWidth)
+        maxWidth = figureSizes[i].width;
+    return maxWidth;
+  }
+
+  // layout a chart
+  function layoutChart(chart, forceFlex) {
+
+    // state to return
+    var result = {
+      notes: false,
+      flex: false
+    };
+
+    // extract the title
+    var title = extractTitle(chart);
+
+    // find components that apply to this container
+    var components = componentsFind(chart);
+
+    // if it's a custom component then call it and return
+    var customComponents = componentsCustom(components);
+    if (customComponents.length) {
+      componentsLayout(customComponents, title, chart);
+      result.notes = false;
+      result.flex = forceFlex || componentsFlex(customComponents);
+      return result;
+    }
+
+    // put all the content in a chart wrapper div
+    chart.addClass('chart-wrapper');
+    chart.wrapInner('<div class="chart-stage"></div>');
+    var chartContent = chart.children('.chart-stage');
+
+    // flex the content if appropriate
+    result.flex = forceFlex || componentsFlex(components);
+    if (result.flex) {
+      // add flex classes
+      chart.addClass('chart-wrapper-flex');
+      chartContent.addClass('chart-stage-flex');
+
+      // additional shim to break out of flexbox sizing
+      chartContent.wrapInner('<div class="chart-shim"></div>');
+      chartContent = chartContent.children('.chart-shim');
+    }
+
+    // set custom data-padding attribute
+    var pad = chart.attr('data-padding');
+    if (pad) {
+      if (pad === "0")
+        chart.addClass('no-padding');
+      else {
+        pad = pad + 'px';
+        chartContent.css('left', pad)
+                    .css('top', pad)
+                    .css('right', pad)
+                    .css('bottom', pad)
+      }
+    }
+
+    // call compoents
+    componentsLayout(components, title, chartContent);
+
+    // also activate components on shiny output
+    findShinyOutput(chartContent).on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+
+          // see if we opted out of flex based on our output (for shiny
+          // we can't tell what type of output we have until after the
+          // value is bound)
+          var components = componentsFind(element);
+          var flex = forceFlex || componentsFlex(components);
+          if (!flex) {
+            chart.css('height', "");
+            setFlex(chart, "");
+            chart.removeClass('chart-wrapper-flex');
+            chartContent.removeClass('chart-stage-flex');
+            chartContent.children().unwrap();
+          }
+
+          // perform layout
+          componentsLayout(components, title, element.parent());
+        }, 10);
+      });
+
+    // add the title
+    var chartTitle = $('<div class="chart-title"></div>');
+    chartTitle.append(title);
+    chart.prepend(chartTitle);
+
+    // add the notes section
+    var chartNotes = $('<div class="chart-notes"></div>');
+    chartNotes.html('&nbsp;');
+    chart.append(chartNotes);
+
+    // attempt to extract notes if we have a component
+    if (components.length)
+      result.notes = extractChartNotes(chartContent, chartNotes);
+
+    // return result
+    return result;
+  }
+
+  // build a tabset from a section div with the .tabset class
+  function layoutTabset(tabset) {
+
+    // check for fade option
+    var fade = tabset.hasClass("tabset-fade");
+    var navClass = "nav-tabs";
+
+    // determine the heading level of the tabset and tabs
+    var match = tabset.attr('class').match(/level(\d) /);
+    if (match === null)
+      return;
+    var tabsetLevel = Number(match[1]);
+    var tabLevel = tabsetLevel + 1;
+
+    // find all subheadings immediately below
+    var tabs = tabset.find("div.section.level" + tabLevel);
+    if (!tabs.length)
+      return;
+
+    // create tablist and tab-content elements
+    var tabList = $('<ul class="nav ' + navClass + '" role="tablist"></ul>');
+    $(tabs[0]).before(tabList);
+    var tabContent = $('<div class="tab-content"></div>');
+    $(tabs[0]).before(tabContent);
+
+    // build the tabset
+    tabs.each(function(i) {
+
+      // get the tab div
+      var tab = $(tabs[i]);
+
+      // get the id then sanitize it for use with bootstrap tabs
+      var id = tab.attr('id');
+
+      // sanitize the id for use with bootstrap tabs
+      id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+      tab.attr('id', id);
+
+      // get the heading element within it and grab it's text
+      var heading = tab.find('h' + tabLevel + ':first');
+      var headingDom = heading.contents();
+
+      // build and append the tab list item
+      var a = $('<a role="tab" data-toggle="tab"></a>');
+      a.append(headingDom);
+      a.attr('href', '#' + id);
+      a.attr('aria-controls', id);
+      var li = $('<li role="presentation"></li>');
+      li.append(a);
+      if (i === 0)
+        li.attr('class', 'active');
+      tabList.append(li);
+
+      // set it's attributes
+      tab.attr('role', 'tabpanel');
+      tab.addClass('tab-pane');
+      tab.addClass('tabbed-pane');
+      tab.addClass('no-title');
+      if (fade)
+        tab.addClass('fade');
+      if (i === 0) {
+        tab.addClass('active');
+        if (fade)
+          tab.addClass('in');
+      }
+
+      // move it into the tab content div
+      tab.detach().appendTo(tabContent);
+    });
+
+    // add nav-tabs-custom
+    tabset.addClass('nav-tabs-custom');
+
+    // internal layout is dashboard-column with tab-content flexing
+    tabset.addClass('dashboard-column');
+    setFlex(tabContent, 1);
+  }
+
+  // one time global initialization for components
+  function componentsInit(dashboardContainer) {
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.init)
+        component.init(dashboardContainer);
+    }
+  }
+
+  // find components that apply within a container
+  function componentsFind(container) {
+
+    // look for components
+    var components = [];
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.find(container).length)
+        components.push(component);
+    }
+
+    // if there were none then use a special flowing content component
+    // that just adds a scrollbar in fillPage mode
+    if (components.length == 0) {
+      components.push({
+        find: function(container) {
+          return container;
+        },
+
+        flex: function(fillPage) {
+          return fillPage;
+        },
+
+        layout: function(title, container, element, fillPage) {
+          if (fillPage) {
+            container.addClass('flowing-content-shim');
+            container.addClass('flowing-content-container');
+          }
+        }
+      });
+    }
+
+    return components;
+  }
+
+  // if there is a custom component then pick it out
+  function componentsCustom(components) {
+    var customComponent = [];
+    for (var i=0; i<components.length; i++)
+      if (components[i].type === "custom") {
+        customComponent.push(components[i]);
+        break;
+      }
+    return customComponent;
+  }
+
+  // query all components for flex
+  function componentsFlex(components) {
+
+    // no components at all means no flex
+    if (components.length === 0)
+      return false;
+
+    // otherwise query components (assume true unless we see false)
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++)
+      if (components[i].flex && !components[i].flex(_options.fillPage))
+        return false;
+    return true;
+  }
+
+  // layout all components
+  function componentsLayout(components, title, container) {
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++) {
+      var element = components[i].find(container);
+      if (components[i].layout) {
+        // call layout (don't call other components if it returns false)
+        var result = components[i].layout(title, container, element, _options.fillPage);
+        if (result === false)
+          return;
+      }
+    }
+  }
+
+  // get a reference to the h3, discover it's inner html, and remove it
+  function extractTitle(container) {
+    var h3 = container.children('h3').first();
+    var title = '';
+    if (!container.hasClass('no-title'))
+      title = h3.contents();
+    h3.detach();
+    return title;
+  }
+
+  // extract chart notes
+  function extractChartNotes(chartContent, chartNotes) {
+    // look for a terminating blockquote or image caption
+    var blockquote = chartContent.children('blockquote:last-child');
+    var caption = chartContent.children('div.image-container')
+                              .children('p.caption');
+    if (blockquote.length) {
+      chartNotes.empty().append(blockquote.children('p:first-child').contents());
+      blockquote.remove();
+      return true;
+    } else if (caption.length) {
+      chartNotes.empty().append(caption.contents());
+      caption.remove();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function findShinyOutput(chartContent) {
+    return chartContent.find('.shiny-text-output, .shiny-html-output');
+  }
+
+  // safely detect rendering on a mobile phone
+  function isMobilePhone() {
+    try
+    {
+      return ! window.matchMedia("only screen and (min-width: 768px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  function isFillPage() {
+    return _options.fillPage;
+  }
+
+  // detect portrait mode
+  function isPortrait() {
+    return ($(window).width() < $(window).height());
+  }
+
+  // safely detect rendering on a tablet
+  function isTablet() {
+    try
+    {
+      return window.matchMedia("only screen and (min-width: 769px) and (max-width: 992px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  // test whether this is a shiny doc
+  function isShinyDoc() {
+    return (typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings);
+  }
+
+  // set flex using vendor specific prefixes
+  function setFlex(el, flex) {
+    el.css('-webkit-box-flex', flex)
+      .css('-webkit-flex', flex)
+      .css('-ms-flex', flex)
+      .css('flex', flex);
+  }
+
+  // support bookmarking of pages
+  function handleLocationHash() {
+
+    // restore tab/page from bookmark
+    var hash = window.decodeURIComponent(window.location.hash);
+    if (hash.length > 0)
+      $('ul.nav a[href="' + hash + '"]').tab('show');
+    FlexDashboardUtils.manageActiveNavbarMenu();
+
+    // navigate to a tab when the history changes
+    window.addEventListener("popstate", function(e) {
+      var hash = window.decodeURIComponent(window.location.hash);
+      var activeTab = $('ul.nav a[href="' + hash + '"]');
+      if (activeTab.length) {
+        activeTab.tab('show');
+      } else {
+        $('ul.nav a:first').tab('show');
+      }
+      FlexDashboardUtils.manageActiveNavbarMenu();
+    });
+
+    // add a hash to the URL when the user clicks on a tab/page
+    $('.navbar-nav a[data-toggle="tab"]').on('click', function(e) {
+      var baseUrl = FlexDashboardUtils.urlWithoutHash(window.location.href);
+      var hash = FlexDashboardUtils.urlHash($(this).attr('href'));
+      var href = baseUrl + hash;
+      FlexDashboardUtils.setLocation(href);
+    });
+
+    // handle clicks of other links that should activate pages
+    var navPages = $('ul.navbar-nav li a[data-toggle=tab]');
+    navPages.each(function() {
+      var href =  $(this).attr('href');
+      var links = $('a[href="' + href + '"][data-toggle!=tab]');
+      links.each(function() {
+        $(this).on('click', function(e) {
+          window.FlexDashboardUtils.showPage(href);
+        });
+      });
+    });
+  }
+
+  // tweak Prism highlighting
+  function initPrismHighlighting() {
+
+    if (window.Prism) {
+      Prism.languages.insertBefore('r', 'comment', {
+        'heading': [
+          {
+            // title 1
+        	  // =======
+
+        	  // title 2
+        	  // -------
+        	  pattern: /\w+.*(?:\r?\n|\r)(?:====+|----+)/,
+            alias: 'operator'
+          },
+          {
+            // ### title 3
+            pattern: /(^\s*)###[^#].+/m,
+            lookbehind: true,
+            alias: 'operator'
+          }
+        ]
+      });
+
+      // prism highlight
+      Prism.highlightAll();
+    }
+  }
+
+
+  // get theme color
+  var themeColors = {
+    bootstrap: {
+      primary: "rgba(51, 122, 183, 0.4)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    cerulean: {
+      primary: "rgb(47, 164, 231)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    journal: {
+      primary: "rgba(235, 104, 100, 0.70)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    flatly: {
+      primary: "rgba(44, 62, 80, 0.70)",
+      info: "rgba(52, 152, 219, 0.70)",
+      success: "rgba(24, 188, 156, 0.70)",
+      warning: "rgba(243, 156, 18, 0.70)",
+      danger: "rgba(231, 76, 60, 0.70)"
+    },
+    readable: {
+      primary: "rgba(69, 130, 236, 0.4)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    spacelab: {
+      primary: "rgba(68, 110, 155, 0.25)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    united: {
+      primary: "rgba(221, 72, 20, 0.30)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    cosmo: {
+      primary: "rgba(39, 128, 227, 0.7)",
+      info: "rgba(153, 84, 187, 0.7)",
+      success: "rgba(63, 182, 24, 0.7)",
+      warning: "rgba(255, 117, 24, 0.7)",
+      danger: "rgba(255, 0, 57, 0.7)"
+    },
+    lumen: {
+      primary: "rgba(21, 140, 186, 0.70)",
+      info: "rgba(117, 202, 235, 0.90)",
+      success: "rgba(40, 182, 44, 0.70)",
+      warning: "rgba(255, 133, 27, 0.70)",
+      danger: "rgba(255, 65, 54, 0.70)"
+    },
+    paper: {
+      primary: "rgba(33, 150, 243, 0.35)",
+      info: "rgb(225, 190, 231)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(255, 224, 178)",
+      danger: "rgb(249, 189, 187)"
+    },
+    sandstone: {
+      primary: "rgba(50, 93, 136, 0.3)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    simplex: {
+      primary: "rgba(217, 35, 15, 0.25)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    yeti: {
+      primary: "rgba(0, 140, 186, 0.298039)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    }
+  }
+  function themeColor(color) {
+    return themeColors[_options.theme][color];
+  }
+
+  FlexDashboard.prototype = {
+    constructor: FlexDashboard,
+    init: init,
+    isMobilePhone: isMobilePhone,
+    isFillPage: isFillPage,
+    themeColor: themeColor
+  };
+
+  return FlexDashboard;
+
+})();
+
+// utils
+window.FlexDashboardUtils = {
+  resizableImage: function(img) {
+    var src = img.attr('src');
+    var url = 'url("' + src + '")';
+    img.parent().css('background', url)
+                .css('background-size', 'contain')
+                .css('background-repeat', 'no-repeat')
+                .css('background-position', 'center')
+                .addClass('image-container');
+  },
+  setLocation: function(href) {
+    if (history && history.pushState) {
+      history.pushState(null, null, href);
+    } else {
+      window.location.replace(href);
+    }
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 10);
+    this.manageActiveNavbarMenu();
+  },
+  showPage: function(href) {
+    $('ul.navbar-nav li a[href="' + href + '"]').tab('show');
+    var baseUrl = this.urlWithoutHash(window.location.href);
+    var loc = baseUrl + href;
+    this.setLocation(loc);
+  },
+  showLinkedValue: function(href) {
+    // check for a page link
+    if ($('ul.navbar-nav li a[data-toggle=tab][href="' + href + '"]').length > 0)
+      this.showPage(href);
+    else
+      window.open(href);
+  },
+  urlWithoutHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(0, hashLoc);
+    else
+      return url;
+  },
+  urlHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(hashLoc);
+    else
+      return "";
+  },
+  manageActiveNavbarMenu: function () {
+    // remove active from anyone currently active
+    $('.navbar ul.nav').find('li').removeClass('active');
+    // find the active tab
+    var activeTab = $('.dashboard-page-wrapper.tab-pane.active');
+    if (activeTab.length > 0) {
+      var tabId = activeTab.attr('id');
+      if (tabId)
+        $(".navbar ul.nav a[href='#" + tabId + "']").parents('li').addClass('active');
+    }
+  }
+};
+
+window.FlexDashboard = new FlexDashboard();
+
+// empty content
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    if (container.find('p').length == 0)
+      return container;
+    else
+      return $();
+  }
+})
+
+// plot image
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('p')
+                    .children('img:only-child');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// plot image (figure style)
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.figure').children('img');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// htmlwidget
+window.FlexDashboardComponents.push({
+
+  init: function(dashboardContainer) {
+    // trigger "shown" after initial layout to force static htmlwidgets
+    // in runtime: shiny to be resized after the dom has been transformed
+    dashboardContainer.on('flexdashboard:layoutcomplete', function(event) {
+      setTimeout(function() {
+        dashboardContainer.trigger('shown');
+      }, 200);
+    });
+  },
+
+  find: function(container) {
+    return container.children('div[id^="htmlwidget-"],div.html-widget');
+  }
+});
+
+// gauge
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.html-widget.gauge');
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+
+  }
+
+});
+
+// shiny output
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.children('div[class^="shiny-"]');
+  }
+});
+
+// datatables
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.find('.datatables');
+  },
+  flex: function(fillPage) {
+    return fillPage;
+  }
+});
+
+// bootstrap table
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    var bsTable = container.find('table.table');
+    if (bsTable.length !== 0)
+      return bsTable;
+    else
+      return container.find('tr.header').parent('thead').parent('table');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var bsTable = element;
+
+    // fixup xtable generated tables with a proper thead
+    var headerRow = bsTable.find('tbody > tr:first-child > th').parent();
+    if (headerRow.length > 0) {
+      var thead = $('<thead></thead>');
+      bsTable.prepend(thead);
+      headerRow.detach().appendTo(thead);
+    }
+
+    // improve appearance
+    container.addClass('bootstrap-table');
+
+    // for fill page provide scrolling w/ sticky headers
+    if (fillPage) {
+      // force scrollbar on overflow
+      container.addClass('flowing-content-shim');
+
+      // stable table headers when scrolling
+      bsTable.stickyTableHeaders({
+        scrollableArea: container
+      });
+    }
+  }
+});
+
+// embedded shiny app
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('iframe.shiny-frame');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage) {
+      element.attr('height', '100%');
+    } else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (!height)
+        height = element.attr('height');
+      if (!height)
+        element.attr('height', 500);
+    }
+  }
+});
+
+// shiny fillRow or fillCol
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('.flexfill-container');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage)
+      element.css('height', '100%');
+    else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (height === "100%" || height === "auto" || height === "initial" ||
+          height === "inherit" || !height) {
+        element.css('height', 500);
+      }
+    }
+  }
+});
+
+// valueBox
+window.FlexDashboardComponents.push({
+
+  type: "custom",
+
+  find: function(container) {
+    if (container.find('span.value-output, .shiny-valuebox-output').length)
+      return container;
+    else
+      return $();
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var chartTitle = title;
+    var valueBox = element;
+
+    // add value-box class to container
+    container.addClass('value-box');
+
+    // value paragraph
+    var value = $('<p class="value"></p>');
+
+    // if we have shiny-text-output then just move it in
+    var valueOutputSpan = [];
+    var shinyOutput = valueBox.find('.shiny-valuebox-output').detach();
+    if (shinyOutput.length) {
+      valueBox.children().remove();
+      shinyOutput.html("&mdash;");
+      value.append(shinyOutput);
+    } else {
+      // extract the value (remove leading vector index)
+      var chartValue = valueBox.text().trim();
+      chartValue = chartValue.replace("[1] ", "");
+      valueOutputSpan = valueBox.find('span.value-output').detach();
+      valueBox.children().remove();
+      value.text(chartValue);
+    }
+
+    // caption
+    var caption = $('<p class="caption"></p>');
+    caption.append(chartTitle);
+
+    // build inner div for value box and add it
+    var inner = $('<div class="inner"></div>');
+    inner.append(value);
+    inner.append(caption);
+    valueBox.append(inner);
+
+    // add icon if specified
+    var icon = $('<div class="icon"><i></i></div>');
+    valueBox.append(icon);
+    function setIcon(chartIcon) {
+      var iconLib = "";
+      var iconSplit = chartIcon.split(" ");
+      if (iconSplit.length > 1) {
+        iconLib = iconSplit[0];
+        chartIcon = iconSplit.slice(1).join(" ");
+      } else {
+        var components = chartIcon.split("-");
+        if (components.length > 1)
+          iconLib = components[0];
+      }
+      icon.children('i').attr('class', iconLib + ' ' + chartIcon);
+    }
+    var chartIcon = valueBox.attr('data-icon');
+    if (chartIcon)
+      setIcon(chartIcon);
+
+    // set color based on data-background if necessary
+    var dataBackground = valueBox.attr('data-background');
+    if (dataBackground)
+      valueBox.css('background-color', bgColor);
+    else {
+      // default to bg-primary if no other background is specified
+      if (!valueBox.hasClass('bg-primary') &&
+          !valueBox.hasClass('bg-info') &&
+          !valueBox.hasClass('bg-warning') &&
+          !valueBox.hasClass('bg-success') &&
+          !valueBox.hasClass('bg-danger')) {
+        valueBox.addClass('bg-primary');
+      }
+    }
+
+    // handle data attributes in valueOutputSpan
+    function handleValueOutput(valueOutput) {
+
+      // caption
+      var dataCaption = valueOutput.attr('data-caption');
+      if (dataCaption)
+        caption.html(dataCaption);
+
+      // icon
+      var dataIcon = valueOutput.attr('data-icon');
+      if (dataIcon)
+        setIcon(dataIcon);
+
+      // color
+      var dataColor = valueOutput.attr('data-color');
+      if (dataColor) {
+        if (dataColor.indexOf('bg-') === 0) {
+          valueBox.css('background-color', '');
+          if (!valueBox.hasClass(dataColor)) {
+             valueBox.removeClass('bg-primary bg-info bg-warning bg-danger bg-success');
+             valueBox.addClass(dataColor);
+          }
+        } else {
+          valueBox.removeClass('bg-primary bg-info bg-warning bg-danger bg-success');
+          valueBox.css('background-color', dataColor);
+        }
+      }
+
+      // url
+      var dataHref = valueOutput.attr('data-href');
+      if (dataHref) {
+        valueBox.addClass('linked-value');
+        valueBox.off('click.value-box');
+        valueBox.on('click.value-box', function(e) {
+          window.FlexDashboardUtils.showLinkedValue(dataHref);
+        });
+      }
+    }
+
+    // check for a valueOutputSpan
+    if (valueOutputSpan.length > 0) {
+      handleValueOutput(valueOutputSpan);
+    }
+
+    // if we have a shinyOutput then bind a listener to handle
+    // new valueOutputSpan values
+    shinyOutput.on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+          var valueOutputSpan = element.find('span.value-output');
+          if (valueOutputSpan.length > 0)
+            handleValueOutput(valueOutputSpan);
+        }, 10);
+      }
+    );
+  }
+});
+</script>
+
+<div id="dashboard-container">
+
+<div id="introduction" class="section level1 storyboard">
+<h1>Introduction</h1>
+<div id="project-introduction" class="section level3">
+<h3>Project Introduction</h3>
+<p>COVID-19 pedemic is an ongoing pandmmic of coronavirus disease. Since the virus are mainly throught the air,</p>
+<p>the public transportation is one of the most common places to get potential contact with some one who has the virus.</p>
+<p>In this project, I will look at the United States airline data with in the time period of mid-March to early April.</p>
+<p>With analyisis of those data I hope you could gain some insight about the United States Airline operation within those days.</p>
+<p>The project contains following part:</p>
+<ol style="list-style-type: decimal">
+<li><p>EDA (Exploratory Data Analysis)</p></li>
+<li><p>Time Series Line Plot</p></li>
+<li><p>Geolocation Map of the Airport</p></li>
+<li><p>Text Visualization about the related Tweets</p></li>
+<li><p>U.S. Airline Traffic Network within Those Days</p></li>
+</ol>
+<p>There are three data sets used in this project:</p>
+<ol style="list-style-type: decimal">
+<li><p>COVID-19(+) Interactions Within Air Travel</p></li>
+<li><p>Airport Geolocation Data</p></li>
+<li><p>Twitter data about flight during COVID Period</p></li>
+</ol>
+</div>
+</div>
+<div id="eda" class="section level1 storyboard">
+<h1>EDA</h1>
+<div id="average-weighted-seats-for-each-carrier" class="section level3">
+<h3>Average Weighted Seats For Each Carrier</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-1-1.png" width="576" data-figure-id=fig1 /></p>
+<hr />
+<ul>
+<li><p>Weighted Seats is number of seats available times the loading factor</p></li>
+<li><p>As we can see Sun Country Airline have the largest weighted seats given in the pandemic period and cape air have the lowest weighted seats</p></li>
+</ul>
+</div>
+<div id="boxplot-for-average-weighted-seats" class="section level3">
+<h3>Boxplot For Average Weighted Seats</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-2-1.png" width="576" data-figure-id=fig2 /></p>
+<hr />
+<ul>
+<li>To give you a more detailed look at the weighted seats data, we can see most of the carriers’ weighted seats are in the interquartile range with few exceptions</li>
+</ul>
+</div>
+<div id="average-load-factor-for-each-carrier" class="section level3">
+<h3>Average Load Factor For Each Carrier</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-3-1.png" width="576" data-figure-id=fig3 /></p>
+<hr />
+<ul>
+<li><p>Large number of weighted seats could cause by larger aircraft</p></li>
+<li><p>By looking at the loading factor instead, we can gain more information about how a carrier operations during the pandemic</p></li>
+<li><p>We can see the Sun Country Airline still leading the chart with over 0.9 loading factor</p></li>
+</ul>
+</div>
+<div id="boxplot-for-average-loading-factor" class="section level3">
+<h3>Boxplot For Average Loading Factor</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-4-1.png" width="576" data-figure-id=fig4 /></p>
+<hr />
+<ul>
+<li>To give you a more detailed look at the loading factor data, we can see most of the carriers’ loading factor data are in the interquartile range with few exceptions</li>
+</ul>
+</div>
+<div id="top-10-airport-traffic" class="section level3">
+<h3>Top 10 Airport Traffic</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-5-1.png" width="576" data-figure-id=fig5 /></p>
+<hr />
+<ul>
+<li><p>Those are the top 10 airport that have most traffic (in-and-out flight) during the time period</p></li>
+<li><p>We can see JFK (in New York) is the airport that have most traffic.</p></li>
+</ul>
+</div>
+</div>
+<div id="time-series" class="section level1 storyboard">
+<h1>Time Series</h1>
+<div id="number-of-flight-by-date" class="section level3">
+<h3>Number of Flight by Date</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-6-1.png" width="576" data-figure-id=fig6 /></p>
+<hr />
+<ul>
+<li><p>What about the number of the flight in the time period</p></li>
+<li><p>It turns out in the mid March there is increasing trend then the COVID gets more intense in the late March the number of flight go down fast which could be the time when airport starting closing out</p></li>
+</ul>
+</div>
+</div>
+<div id="geographic" class="section level1 storyboard">
+<h1>Geographic</h1>
+<div id="leaflet-map-for-indicating-airport-location" class="section level3">
+<h3>Leaflet Map for indicating Airport Location</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="htmlwidget-3952840cf801f0ceadd3" style="width:576px;height:460.8px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3952840cf801f0ceadd3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[40.65209961,35.040199,41.25310135,31.61129951,42.05319977,42.74829865,42.55709839,37.434898,35.219398,39.22320175,33.6367,44.2580986,44.3205986,30.19449997,35.43619919,41.33850098,42.23490143,41.93889999,35.43360138,44.80739975,44.45000076,33.56290054,40.47710037,36.12450027,43.5644,42.36429977,29.95079994,40.78319931,44.47190094,42.94049835,34.20069885,39.1754,45.77750015,33.93880081,40.91609955,37.3030014,35.03530121,38.1385994,32.89860153,41.88470078,41.4117012,35.2140007,39.998001,40.03919983,32.33750153,38.805801,38.81809998,27.77039909,38.37310028,39.04880142,44.77759933,32.847099,39.90240097,42.40200043,38.8521,37.76340103,39.86169815,32.896801,46.84209824,41.5340004,42.21239853,30.357106,39.64260101,33.22100067,31.80719948,44.12459946,38.03699875,40.69250107,24.55610085,46.92070007,36.77619934,26.072599,42.9654007,43.58200073,40.97850037,39.12239838,44.48509979,42.88079834,36.09780121,34.89569855,38.53390121,40.48120117,21.32062,34.47800064,29.64539909,41.06700134,34.6371994,38.84220123,38.94449997,29.9843998,37.649899,34.27059937,39.7173,null,43.6072998,32.31119919,30.49410057,40.63980103,46.92969894,19.738783,42.77870178,41.31209946,36.08010101,33.94250107,33.663601,43.62609863,38.03649902,40.77719879,33.81769943,21.97599983,34.72940063,43.879002,39.2976,28.42939949,43.15779877,40.19350052,41.785999,32.33259964,35.04240036,39.14099884,25.79319954,42.94720078,41.44850159,32.51089859,37.62409973,30.69120026,48.25939941,46.35359955,43.13990021,46.91630173,44.882,44.93579865,29.99340057,38.50979996,41.39310074,33.67969894,37.721298,20.8986,35.39310074,41.3032,34.05599976,41.9786,36.89459991,47.90629959,26.68320084,45.58869934,39.87189865,33.43429947,40.66419983,40.49150085,30.47340012,46.68899918,34.65449905,46.26470184,33.82970047,42.07189941,41.732601,43.64619827,35.87760162,37.50519943,44.06010056,39.49909973,43.1189003,43.90829849,26.53619957,35.61709976,32.73360062,29.53370094,32.12760162,34.42620087,40.84930038,38.1744,47.449001,37.61899948,37.24570084,37.362598,31.35770035,18.43939972,40.78839874,44.38529968,38.69540024,33.67570114,33.9888,27.39539909,38.748697,38.50899887,18.33729935,17.70190048,43.50439835,42.40259933,36.16120148,43.11119843,30.39649963,41.58679962,27.97550011,36.19839859,32.11610031,44.74140167,33.45370102,32.35409927,35.81100082,39.94269943,28.8526001,40.4408989,30.4832,36.281898,46.56819916],[-75.44080353,-106.609001,-70.06020355,-97.23049927,-102.8040009,-73.80169678,-92.40029907,-105.866997,-101.706001,-106.8690033,-84.428101,-88.51909637,-69.79730225,-97.66989899,-82.54180145,-75.7233963,-85.55210114,-72.68319702,-119.0569992,-68.82810211,-68.3615036,-86.75350189,-88.91590118,-86.67819977,-116.223,-71.00520325,-94.02069855,-91.12550354,-73.15329742,-78.73220062,-118.3590012,-76.668297,-111.1529999,-81.11949921,-81.44219971,-108.6279984,-85.20379639,-78.45290375,-80.04049683,-91.71080017,-81.84980011,-80.94309998,-82.891899,-88.27809906,-104.2630005,-104.700996,-92.21959686,-97.50119781,-81.59320068,-84.6678009,-89.66680145,-96.851799,-84.2193985,-90.70950317,-77.037697,-99.96559906,-104.6729965,-97.038002,-92.19360352,-93.6631012,-83.35340118,-85.795414,-106.9179993,-92.81330109,-106.3779984,-123.211998,-87.53240204,-74.16870117,-81.75959778,-96.81580353,-119.7180023,-80.152702,-83.74359894,-96.74189758,-85.19509888,-108.5270004,-88.12960052,-85.52279663,-79.93730164,-82.21890259,-106.9329987,-107.2180023,-157.924228,-93.09619904,-95.27890015,-73.70760345,-86.77510071,-99.27320099,-77.45580292,-95.34140015,-97.433098,-77.90260315,-86.294403,null,-110.737999,-90.07589722,-81.68789673,-73.77890015,-98.67819977,-156.045603,-84.58740234,-105.6750031,-115.1520004,-118.4079971,-101.822998,-72.30419922,-84.60590363,-73.87259674,-118.1520004,-159.3390045,-92.22429657,-91.256699,-94.713898,-81.30899811,-93.33129883,-76.76339722,-87.752403,-88.75189972,-89.97669983,-96.67079926,-80.29060364,-87.89659882,-90.50749969,-92.03769684,-118.8379974,-88.24279785,-101.2799988,-87.395401,-89.33750153,-114.0910034,-93.221802,-74.84559631,-90.25800323,-107.8939972,-70.61430359,-78.92829895,-122.221001,-156.429993,-97.60070038,-95.894096,-117.6009979,-87.9048,-76.20120239,-122.2819977,-80.09559631,-122.5979996,-75.2410965,-112.012001,-89.69329834,-80.23290253,-87.18659973,-68.0447998,-112.4199982,-119.1190033,-116.5070038,-70.2213974,-71.420403,-70.30930328,-78.78749847,-77.31970215,-69.09919739,-119.7679977,-77.67240143,-92.5,-81.75520325,-106.0889969,-117.1900024,-98.46980286,-81.20210266,-119.8399963,-77.84870148,-85.736,-122.308998,-122.375,-93.38860321,-121.929001,-100.4960022,-66.00180054,-111.9779968,-74.20619965,-121.5910034,-117.8679962,-98.491898,-82.55439758,-90.370003,-122.8130035,-64.9733963,-64.79859924,-114.2959976,-96.38439941,-97.08570099,-76.10630035,-84.35030365,-83.80780029,-82.53320313,-95.88809967,-110.9410019,-85.5821991,-93.99099731,-95.40239716,-83.9940033,-91.19460297,-96.91850281,-109.5100021,-86.525398,-94.306801,-120.5439987],null,null,"Airport",{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["<strong>Airport Name: <\/strong>Lehigh Valley International Airport<br><strong>Airport Code: <\/strong>ABE<br><strong>City: <\/strong>Allentown<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Albuquerque International Sunport<br><strong>Airport Code: <\/strong>ABQ<br><strong>City: <\/strong>Albuquerque<br><strong>Flight Count: <\/strong>36","<strong>Airport Name: <\/strong>Nantucket Memorial Airport<br><strong>Airport Code: <\/strong>ACK<br><strong>City: <\/strong>Nantucket<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Waco Regional Airport<br><strong>Airport Code: <\/strong>ACT<br><strong>City: <\/strong>Waco<br><strong>Flight Count: <\/strong>1","<strong>Airport Name: <\/strong>Alliance Municipal Airport<br><strong>Airport Code: <\/strong>AIA<br><strong>City: <\/strong>Alliance<br><strong>Flight Count: <\/strong>5","<strong>Airport Name: <\/strong>Albany International Airport<br><strong>Airport Code: <\/strong>ALB<br><strong>City: <\/strong>Albany<br><strong>Flight Count: <\/strong>34","<strong>Airport Name: <\/strong>Waterloo Regional Airport<br><strong>Airport Code: <\/strong>ALO<br><strong>City: <\/strong>Waterloo<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>San Luis Valley Regional Bergman Field<br><strong>Airport Code: <\/strong>ALS<br><strong>City: <\/strong>Alamosa<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Rick Husband Amarillo International Airport<br><strong>Airport Code: <\/strong>AMA<br><strong>City: <\/strong>Amarillo<br><strong>Flight Count: <\/strong>1","<strong>Airport Name: <\/strong>Aspen-Pitkin Co/Sardy Field<br><strong>Airport Code: <\/strong>ASE<br><strong>City: <\/strong>Aspen<br><strong>Flight Count: <\/strong>2","<strong>Airport Name: <\/strong>Hartsfield Jackson Atlanta International Airport<br><strong>Airport Code: <\/strong>ATL<br><strong>City: <\/strong>Atlanta<br><strong>Flight Count: <\/strong>601","<strong>Airport Name: <\/strong>Appleton International Airport<br><strong>Airport Code: <\/strong>ATW<br><strong>City: <\/strong>Appleton<br><strong>Flight Count: <\/strong>20","<strong>Airport Name: <\/strong>Augusta State Airport<br><strong>Airport Code: <\/strong>AUG<br><strong>City: <\/strong>Augusta<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Austin Bergstrom International Airport<br><strong>Airport Code: <\/strong>AUS<br><strong>City: <\/strong>Austin<br><strong>Flight Count: <\/strong>190","<strong>Airport Name: <\/strong>Asheville Regional Airport<br><strong>Airport Code: <\/strong>AVL<br><strong>City: <\/strong>Asheville<br><strong>Flight Count: <\/strong>3","<strong>Airport Name: <\/strong>Wilkes Barre Scranton International Airport<br><strong>Airport Code: <\/strong>AVP<br><strong>City: <\/strong>Scranton<br><strong>Flight Count: <\/strong>11","<strong>Airport Name: <\/strong>Kalamazoo Battle Creek International Airport<br><strong>Airport Code: <\/strong>AZO<br><strong>City: <\/strong>Kalamazoo<br><strong>Flight Count: <\/strong>20","<strong>Airport Name: <\/strong>Bradley International Airport<br><strong>Airport Code: <\/strong>BDL<br><strong>City: <\/strong>Windsor Locks<br><strong>Flight Count: <\/strong>32","<strong>Airport Name: <\/strong>Meadows Field<br><strong>Airport Code: <\/strong>BFL<br><strong>City: <\/strong>Bakersfield<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Bangor International Airport<br><strong>Airport Code: <\/strong>BGR<br><strong>City: <\/strong>Bangor<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Hancock County-Bar Harbor Airport<br><strong>Airport Code: <\/strong>BHB<br><strong>City: <\/strong>Bar Harbor<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Birmingham-Shuttlesworth International Airport<br><strong>Airport Code: <\/strong>BHM<br><strong>City: <\/strong>Birmingham<br><strong>Flight Count: <\/strong>12","<strong>Airport Name: <\/strong>Central Illinois Regional Airport at Bloomington-Normal<br><strong>Airport Code: <\/strong>BMI<br><strong>City: <\/strong>Bloomington<br><strong>Flight Count: <\/strong>19","<strong>Airport Name: <\/strong>Nashville International Airport<br><strong>Airport Code: <\/strong>BNA<br><strong>City: <\/strong>Nashville<br><strong>Flight Count: <\/strong>221","<strong>Airport Name: <\/strong>Boise Air Terminal/Gowen Field<br><strong>Airport Code: <\/strong>BOI<br><strong>City: <\/strong>Boise<br><strong>Flight Count: <\/strong>28","<strong>Airport Name: <\/strong>General Edward Lawrence Logan International Airport<br><strong>Airport Code: <\/strong>BOS<br><strong>City: <\/strong>Boston<br><strong>Flight Count: <\/strong>1381","<strong>Airport Name: <\/strong>Southeast Texas Regional Airport<br><strong>Airport Code: <\/strong>BPT<br><strong>City: <\/strong>Beaumont<br><strong>Flight Count: <\/strong>18","<strong>Airport Name: <\/strong>Southeast Iowa Regional Airport<br><strong>Airport Code: <\/strong>BRL<br><strong>City: <\/strong>Burlington<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Burlington International Airport<br><strong>Airport Code: <\/strong>BTV<br><strong>City: <\/strong>Burlington<br><strong>Flight Count: <\/strong>67","<strong>Airport Name: <\/strong>Buffalo Niagara International Airport<br><strong>Airport Code: <\/strong>BUF<br><strong>City: <\/strong>Buffalo<br><strong>Flight Count: <\/strong>144","<strong>Airport Name: <\/strong>Bob Hope Airport<br><strong>Airport Code: <\/strong>BUR<br><strong>City: <\/strong>Burbank<br><strong>Flight Count: <\/strong>9","<strong>Airport Name: <\/strong>Baltimore/Washington International Thurgood Marshall Airport<br><strong>Airport Code: <\/strong>BWI<br><strong>City: <\/strong>Baltimore<br><strong>Flight Count: <\/strong>161","<strong>Airport Name: <\/strong>Gallatin Field<br><strong>Airport Code: <\/strong>BZN<br><strong>City: <\/strong>Bozeman<br><strong>Flight Count: <\/strong>25","<strong>Airport Name: <\/strong>Columbia Metropolitan Airport<br><strong>Airport Code: <\/strong>CAE<br><strong>City: <\/strong>Columbia<br><strong>Flight Count: <\/strong>18","<strong>Airport Name: <\/strong>Akron Canton Regional Airport<br><strong>Airport Code: <\/strong>CAK<br><strong>City: <\/strong>Akron<br><strong>Flight Count: <\/strong>12","<strong>Airport Name: <\/strong>Cortez Municipal Airport<br><strong>Airport Code: <\/strong>CEZ<br><strong>City: <\/strong>Cortez<br><strong>Flight Count: <\/strong>28","<strong>Airport Name: <\/strong>Lovell Field<br><strong>Airport Code: <\/strong>CHA<br><strong>City: <\/strong>Chattanooga<br><strong>Flight Count: <\/strong>11","<strong>Airport Name: <\/strong>Charlottesville Albemarle Airport<br><strong>Airport Code: <\/strong>CHO<br><strong>City: <\/strong>Charlottesville VA<br><strong>Flight Count: <\/strong>20","<strong>Airport Name: <\/strong>Charleston Air Force Base-International Airport<br><strong>Airport Code: <\/strong>CHS<br><strong>City: <\/strong>Charleston<br><strong>Flight Count: <\/strong>125","<strong>Airport Name: <\/strong>The Eastern Iowa Airport<br><strong>Airport Code: <\/strong>CID<br><strong>City: <\/strong>Cedar Rapids<br><strong>Flight Count: <\/strong>28","<strong>Airport Name: <\/strong>Cleveland Hopkins International Airport<br><strong>Airport Code: <\/strong>CLE<br><strong>City: <\/strong>Cleveland<br><strong>Flight Count: <\/strong>228","<strong>Airport Name: <\/strong>Charlotte Douglas International Airport<br><strong>Airport Code: <\/strong>CLT<br><strong>City: <\/strong>Charlotte<br><strong>Flight Count: <\/strong>341","<strong>Airport Name: <\/strong>John Glenn Columbus International Airport<br><strong>Airport Code: <\/strong>CMH<br><strong>City: <\/strong>Columbus<br><strong>Flight Count: <\/strong>225","<strong>Airport Name: <\/strong>University of Illinois Willard Airport<br><strong>Airport Code: <\/strong>CMI<br><strong>City: <\/strong>Champaign<br><strong>Flight Count: <\/strong>46","<strong>Airport Name: <\/strong>Cavern City Air Terminal<br><strong>Airport Code: <\/strong>CNM<br><strong>City: <\/strong>Carlsbad<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>City of Colorado Springs Municipal Airport<br><strong>Airport Code: <\/strong>COS<br><strong>City: <\/strong>Colorado Springs<br><strong>Flight Count: <\/strong>5","<strong>Airport Name: <\/strong>Columbia Regional Airport<br><strong>Airport Code: <\/strong>COU<br><strong>City: <\/strong>Columbia<br><strong>Flight Count: <\/strong>13","<strong>Airport Name: <\/strong>Corpus Christi International Airport<br><strong>Airport Code: <\/strong>CRP<br><strong>City: <\/strong>Corpus Christi<br><strong>Flight Count: <\/strong>1","<strong>Airport Name: <\/strong>Yeager Airport<br><strong>Airport Code: <\/strong>CRW<br><strong>City: <\/strong>Charleston<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Cincinnati Northern Kentucky International Airport<br><strong>Airport Code: <\/strong>CVG<br><strong>City: <\/strong>Cincinnati<br><strong>Flight Count: <\/strong>164","<strong>Airport Name: <\/strong>Central Wisconsin Airport<br><strong>Airport Code: <\/strong>CWA<br><strong>City: <\/strong>Wassau<br><strong>Flight Count: <\/strong>20","<strong>Airport Name: <\/strong>Dallas Love Field<br><strong>Airport Code: <\/strong>DAL<br><strong>City: <\/strong>Dallas<br><strong>Flight Count: <\/strong>34","<strong>Airport Name: <\/strong>James M Cox Dayton International Airport<br><strong>Airport Code: <\/strong>DAY<br><strong>City: <\/strong>Dayton<br><strong>Flight Count: <\/strong>39","<strong>Airport Name: <\/strong>Dubuque Regional Airport<br><strong>Airport Code: <\/strong>DBQ<br><strong>City: <\/strong>Dubuque IA<br><strong>Flight Count: <\/strong>20","<strong>Airport Name: <\/strong>Ronald Reagan Washington National Airport<br><strong>Airport Code: <\/strong>DCA<br><strong>City: <\/strong>Washington<br><strong>Flight Count: <\/strong>298","<strong>Airport Name: <\/strong>Dodge City Regional Airport<br><strong>Airport Code: <\/strong>DDC<br><strong>City: <\/strong>Dodge City<br><strong>Flight Count: <\/strong>5","<strong>Airport Name: <\/strong>Denver International Airport<br><strong>Airport Code: <\/strong>DEN<br><strong>City: <\/strong>Denver<br><strong>Flight Count: <\/strong>1744","<strong>Airport Name: <\/strong>Dallas Fort Worth International Airport<br><strong>Airport Code: <\/strong>DFW<br><strong>City: <\/strong>Dallas-Fort Worth<br><strong>Flight Count: <\/strong>1466","<strong>Airport Name: <\/strong>Duluth International Airport<br><strong>Airport Code: <\/strong>DLH<br><strong>City: <\/strong>Duluth<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Des Moines International Airport<br><strong>Airport Code: <\/strong>DSM<br><strong>City: <\/strong>Des Moines<br><strong>Flight Count: <\/strong>45","<strong>Airport Name: <\/strong>Detroit Metropolitan Wayne County Airport<br><strong>Airport Code: <\/strong>DTW<br><strong>City: <\/strong>Detroit<br><strong>Flight Count: <\/strong>340","<strong>Airport Name: <\/strong>Northwest Florida Beaches International Airport<br><strong>Airport Code: <\/strong>ECP<br><strong>City: <\/strong>Panama City<br><strong>Flight Count: <\/strong>2","<strong>Airport Name: <\/strong>Eagle County Regional Airport<br><strong>Airport Code: <\/strong>EGE<br><strong>City: <\/strong>Vail<br><strong>Flight Count: <\/strong>5","<strong>Airport Name: <\/strong>South Arkansas Regional At Goodwin Field<br><strong>Airport Code: <\/strong>ELD<br><strong>City: <\/strong>El Dorado<br><strong>Flight Count: <\/strong>4","<strong>Airport Name: <\/strong>El Paso International Airport<br><strong>Airport Code: <\/strong>ELP<br><strong>City: <\/strong>El Paso<br><strong>Flight Count: <\/strong>29","<strong>Airport Name: <\/strong>Mahlon Sweet Field<br><strong>Airport Code: <\/strong>EUG<br><strong>City: <\/strong>Eugene<br><strong>Flight Count: <\/strong>13","<strong>Airport Name: <\/strong>Evansville Regional Airport<br><strong>Airport Code: <\/strong>EVV<br><strong>City: <\/strong>Evansville<br><strong>Flight Count: <\/strong>28","<strong>Airport Name: <\/strong>Newark Liberty International Airport<br><strong>Airport Code: <\/strong>EWR<br><strong>City: <\/strong>Newark<br><strong>Flight Count: <\/strong>1896","<strong>Airport Name: <\/strong>Key West International Airport<br><strong>Airport Code: <\/strong>EYW<br><strong>City: <\/strong>Key West<br><strong>Flight Count: <\/strong>40","<strong>Airport Name: <\/strong>Hector International Airport<br><strong>Airport Code: <\/strong>FAR<br><strong>City: <\/strong>Fargo<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Fresno Yosemite International Airport<br><strong>Airport Code: <\/strong>FAT<br><strong>City: <\/strong>Fresno<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Fort Lauderdale Hollywood International Airport<br><strong>Airport Code: <\/strong>FLL<br><strong>City: <\/strong>Fort Lauderdale<br><strong>Flight Count: <\/strong>240","<strong>Airport Name: <\/strong>Bishop International Airport<br><strong>Airport Code: <\/strong>FNT<br><strong>City: <\/strong>Flint<br><strong>Flight Count: <\/strong>13","<strong>Airport Name: <\/strong>Joe Foss Field Airport<br><strong>Airport Code: <\/strong>FSD<br><strong>City: <\/strong>Sioux Falls<br><strong>Flight Count: <\/strong>49","<strong>Airport Name: <\/strong>Fort Wayne International Airport<br><strong>Airport Code: <\/strong>FWA<br><strong>City: <\/strong>Fort Wayne<br><strong>Flight Count: <\/strong>26","<strong>Airport Name: <\/strong>Grand Junction Regional Airport<br><strong>Airport Code: <\/strong>GJT<br><strong>City: <\/strong>Grand Junction<br><strong>Flight Count: <\/strong>9","<strong>Airport Name: <\/strong>Austin Straubel International Airport<br><strong>Airport Code: <\/strong>GRB<br><strong>City: <\/strong>Green Bay<br><strong>Flight Count: <\/strong>27","<strong>Airport Name: <\/strong>Gerald R. Ford International Airport<br><strong>Airport Code: <\/strong>GRR<br><strong>City: <\/strong>Grand Rapids<br><strong>Flight Count: <\/strong>47","<strong>Airport Name: <\/strong>Piedmont Triad International Airport<br><strong>Airport Code: <\/strong>GSO<br><strong>City: <\/strong>Greensboro<br><strong>Flight Count: <\/strong>50","<strong>Airport Name: <\/strong>Greenville Spartanburg International Airport<br><strong>Airport Code: <\/strong>GSP<br><strong>City: <\/strong>Greenville<br><strong>Flight Count: <\/strong>42","<strong>Airport Name: <\/strong>Gunnison Crested Butte Regional Airport<br><strong>Airport Code: <\/strong>GUC<br><strong>City: <\/strong>Gunnison<br><strong>Flight Count: <\/strong>2","<strong>Airport Name: <\/strong>Yampa Valley Airport<br><strong>Airport Code: <\/strong>HDN<br><strong>City: <\/strong>Hayden<br><strong>Flight Count: <\/strong>4","<strong>Airport Name: <\/strong>Daniel K Inouye International Airport<br><strong>Airport Code: <\/strong>HNL<br><strong>City: <\/strong>Honolulu<br><strong>Flight Count: <\/strong>13","<strong>Airport Name: <\/strong>Memorial Field<br><strong>Airport Code: <\/strong>HOT<br><strong>City: <\/strong>Hot Springs<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>William P Hobby Airport<br><strong>Airport Code: <\/strong>HOU<br><strong>City: <\/strong>Houston<br><strong>Flight Count: <\/strong>19","<strong>Airport Name: <\/strong>Westchester County Airport<br><strong>Airport Code: <\/strong>HPN<br><strong>City: <\/strong>White Plains<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Huntsville International Carl T Jones Field<br><strong>Airport Code: <\/strong>HSV<br><strong>City: <\/strong>Huntsville<br><strong>Flight Count: <\/strong>21","<strong>Airport Name: <\/strong>Hays Regional Airport<br><strong>Airport Code: <\/strong>HYS<br><strong>City: <\/strong>Hays<br><strong>Flight Count: <\/strong>5","<strong>Airport Name: <\/strong>Washington Dulles International Airport<br><strong>Airport Code: <\/strong>IAD<br><strong>City: <\/strong>Washington<br><strong>Flight Count: <\/strong>133","<strong>Airport Name: <\/strong>George Bush Intercontinental Houston Airport<br><strong>Airport Code: <\/strong>IAH<br><strong>City: <\/strong>Houston<br><strong>Flight Count: <\/strong>493","<strong>Airport Name: <\/strong>Wichita Eisenhower National Airport<br><strong>Airport Code: <\/strong>ICT<br><strong>City: <\/strong>Wichita<br><strong>Flight Count: <\/strong>20","<strong>Airport Name: <\/strong>Wilmington International Airport<br><strong>Airport Code: <\/strong>ILM<br><strong>City: <\/strong>Wilmington<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Indianapolis International Airport<br><strong>Airport Code: <\/strong>IND<br><strong>City: <\/strong>Indianapolis<br><strong>Flight Count: <\/strong>271","<strong>Airport Name: <\/strong>NA<br><strong>Airport Code: <\/strong>IWD<br><strong>City: <\/strong>NA<br><strong>Flight Count: <\/strong>12","<strong>Airport Name: <\/strong>Jackson Hole Airport<br><strong>Airport Code: <\/strong>JAC<br><strong>City: <\/strong>Jacksn Hole<br><strong>Flight Count: <\/strong>12","<strong>Airport Name: <\/strong>Jackson-Medgar Wiley Evers International Airport<br><strong>Airport Code: <\/strong>JAN<br><strong>City: <\/strong>Jackson<br><strong>Flight Count: <\/strong>2","<strong>Airport Name: <\/strong>Jacksonville International Airport<br><strong>Airport Code: <\/strong>JAX<br><strong>City: <\/strong>Jacksonville<br><strong>Flight Count: <\/strong>135","<strong>Airport Name: <\/strong>John F Kennedy International Airport<br><strong>Airport Code: <\/strong>JFK<br><strong>City: <\/strong>New York<br><strong>Flight Count: <\/strong>3492","<strong>Airport Name: <\/strong>Jamestown Regional Airport<br><strong>Airport Code: <\/strong>JMS<br><strong>City: <\/strong>Jamestown<br><strong>Flight Count: <\/strong>10","<strong>Airport Name: <\/strong>Ellison Onizuka Kona International At Keahole Airport<br><strong>Airport Code: <\/strong>KOA<br><strong>City: <\/strong>Kona<br><strong>Flight Count: <\/strong>9","<strong>Airport Name: <\/strong>Capital City Airport<br><strong>Airport Code: <\/strong>LAN<br><strong>City: <\/strong>Lansing<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Laramie Regional Airport<br><strong>Airport Code: <\/strong>LAR<br><strong>City: <\/strong>Laramie<br><strong>Flight Count: <\/strong>5","<strong>Airport Name: <\/strong>McCarran International Airport<br><strong>Airport Code: <\/strong>LAS<br><strong>City: <\/strong>Las Vegas<br><strong>Flight Count: <\/strong>275","<strong>Airport Name: <\/strong>Los Angeles International Airport<br><strong>Airport Code: <\/strong>LAX<br><strong>City: <\/strong>Los Angeles<br><strong>Flight Count: <\/strong>429","<strong>Airport Name: <\/strong>Lubbock Preston Smith International Airport<br><strong>Airport Code: <\/strong>LBB<br><strong>City: <\/strong>Lubbock<br><strong>Flight Count: <\/strong>11","<strong>Airport Name: <\/strong>Lebanon Municipal Airport<br><strong>Airport Code: <\/strong>LEB<br><strong>City: <\/strong>Lebanon<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Blue Grass Airport<br><strong>Airport Code: <\/strong>LEX<br><strong>City: <\/strong>Lexington KY<br><strong>Flight Count: <\/strong>19","<strong>Airport Name: <\/strong>La Guardia Airport<br><strong>Airport Code: <\/strong>LGA<br><strong>City: <\/strong>New York<br><strong>Flight Count: <\/strong>1031","<strong>Airport Name: <\/strong>Long Beach /Daugherty Field/ Airport<br><strong>Airport Code: <\/strong>LGB<br><strong>City: <\/strong>Long Beach<br><strong>Flight Count: <\/strong>8","<strong>Airport Name: <\/strong>Lihue Airport<br><strong>Airport Code: <\/strong>LIH<br><strong>City: <\/strong>Lihue<br><strong>Flight Count: <\/strong>10","<strong>Airport Name: <\/strong>Bill & Hillary Clinton National Airport/Adams Field<br><strong>Airport Code: <\/strong>LIT<br><strong>City: <\/strong>Little Rock<br><strong>Flight Count: <\/strong>21","<strong>Airport Name: <\/strong>La Crosse Municipal Airport<br><strong>Airport Code: <\/strong>LSE<br><strong>City: <\/strong>La Crosse<br><strong>Flight Count: <\/strong>21","<strong>Airport Name: <\/strong>Kansas City International Airport<br><strong>Airport Code: <\/strong>MCI<br><strong>City: <\/strong>Kansas City<br><strong>Flight Count: <\/strong>87","<strong>Airport Name: <\/strong>Orlando International Airport<br><strong>Airport Code: <\/strong>MCO<br><strong>City: <\/strong>Orlando<br><strong>Flight Count: <\/strong>322","<strong>Airport Name: <\/strong>Mason City Municipal Airport<br><strong>Airport Code: <\/strong>MCW<br><strong>City: <\/strong>Mason City<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Harrisburg International Airport<br><strong>Airport Code: <\/strong>MDT<br><strong>City: <\/strong>Harrisburg<br><strong>Flight Count: <\/strong>27","<strong>Airport Name: <\/strong>Chicago Midway International Airport<br><strong>Airport Code: <\/strong>MDW<br><strong>City: <\/strong>Chicago<br><strong>Flight Count: <\/strong>36","<strong>Airport Name: <\/strong>Key Field<br><strong>Airport Code: <\/strong>MEI<br><strong>City: <\/strong>Meridian<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Memphis International Airport<br><strong>Airport Code: <\/strong>MEM<br><strong>City: <\/strong>Memphis<br><strong>Flight Count: <\/strong>89","<strong>Airport Name: <\/strong>Manhattan Regional Airport<br><strong>Airport Code: <\/strong>MHK<br><strong>City: <\/strong>Manhattan<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Miami International Airport<br><strong>Airport Code: <\/strong>MIA<br><strong>City: <\/strong>Miami<br><strong>Flight Count: <\/strong>875","<strong>Airport Name: <\/strong>General Mitchell International Airport<br><strong>Airport Code: <\/strong>MKE<br><strong>City: <\/strong>Milwaukee<br><strong>Flight Count: <\/strong>89","<strong>Airport Name: <\/strong>Quad City International Airport<br><strong>Airport Code: <\/strong>MLI<br><strong>City: <\/strong>Moline<br><strong>Flight Count: <\/strong>40","<strong>Airport Name: <\/strong>Monroe Regional Airport<br><strong>Airport Code: <\/strong>MLU<br><strong>City: <\/strong>Monroe<br><strong>Flight Count: <\/strong>4","<strong>Airport Name: <\/strong>Mammoth Yosemite Airport<br><strong>Airport Code: <\/strong>MMH<br><strong>City: <\/strong>Mammoth Lakes<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Mobile Regional Airport<br><strong>Airport Code: <\/strong>MOB<br><strong>City: <\/strong>Mobile<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Minot International Airport<br><strong>Airport Code: <\/strong>MOT<br><strong>City: <\/strong>Minot<br><strong>Flight Count: <\/strong>1","<strong>Airport Name: <\/strong>Sawyer International Airport<br><strong>Airport Code: <\/strong>MQT<br><strong>City: <\/strong>Gwinn<br><strong>Flight Count: <\/strong>6","<strong>Airport Name: <\/strong>Dane County Regional Truax Field<br><strong>Airport Code: <\/strong>MSN<br><strong>City: <\/strong>Madison<br><strong>Flight Count: <\/strong>45","<strong>Airport Name: <\/strong>Missoula International Airport<br><strong>Airport Code: <\/strong>MSO<br><strong>City: <\/strong>Missoula<br><strong>Flight Count: <\/strong>1","<strong>Airport Name: <\/strong>Minneapolis-St Paul International/Wold-Chamberlain Airport<br><strong>Airport Code: <\/strong>MSP<br><strong>City: <\/strong>Minneapolis<br><strong>Flight Count: <\/strong>244","<strong>Airport Name: <\/strong>Massena International Richards Field<br><strong>Airport Code: <\/strong>MSS<br><strong>City: <\/strong>Massena<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Louis Armstrong New Orleans International Airport<br><strong>Airport Code: <\/strong>MSY<br><strong>City: <\/strong>New Orleans<br><strong>Flight Count: <\/strong>176","<strong>Airport Name: <\/strong>Montrose Regional Airport<br><strong>Airport Code: <\/strong>MTJ<br><strong>City: <\/strong>Montrose CO<br><strong>Flight Count: <\/strong>24","<strong>Airport Name: <\/strong>Martha's Vineyard Airport<br><strong>Airport Code: <\/strong>MVY<br><strong>City: <\/strong>Vineyard Haven MA<br><strong>Flight Count: <\/strong>4","<strong>Airport Name: <\/strong>Myrtle Beach International Airport<br><strong>Airport Code: <\/strong>MYR<br><strong>City: <\/strong>Myrtle Beach<br><strong>Flight Count: <\/strong>18","<strong>Airport Name: <\/strong>Metropolitan Oakland International Airport<br><strong>Airport Code: <\/strong>OAK<br><strong>City: <\/strong>Oakland<br><strong>Flight Count: <\/strong>18","<strong>Airport Name: <\/strong>Kahului Airport<br><strong>Airport Code: <\/strong>OGG<br><strong>City: <\/strong>Kahului<br><strong>Flight Count: <\/strong>21","<strong>Airport Name: <\/strong>Will Rogers World Airport<br><strong>Airport Code: <\/strong>OKC<br><strong>City: <\/strong>Oklahoma City<br><strong>Flight Count: <\/strong>33","<strong>Airport Name: <\/strong>Eppley Airfield<br><strong>Airport Code: <\/strong>OMA<br><strong>City: <\/strong>Omaha<br><strong>Flight Count: <\/strong>57","<strong>Airport Name: <\/strong>Ontario International Airport<br><strong>Airport Code: <\/strong>ONT<br><strong>City: <\/strong>Ontario<br><strong>Flight Count: <\/strong>86","<strong>Airport Name: <\/strong>Chicago O'Hare International Airport<br><strong>Airport Code: <\/strong>ORD<br><strong>City: <\/strong>Chicago<br><strong>Flight Count: <\/strong>3276","<strong>Airport Name: <\/strong>Norfolk International Airport<br><strong>Airport Code: <\/strong>ORF<br><strong>City: <\/strong>Norfolk<br><strong>Flight Count: <\/strong>119","<strong>Airport Name: <\/strong>Snohomish County (Paine Field) Airport<br><strong>Airport Code: <\/strong>PAE<br><strong>City: <\/strong>Everett<br><strong>Flight Count: <\/strong>6","<strong>Airport Name: <\/strong>Palm Beach International Airport<br><strong>Airport Code: <\/strong>PBI<br><strong>City: <\/strong>West Palm Beach<br><strong>Flight Count: <\/strong>129","<strong>Airport Name: <\/strong>Portland International Airport<br><strong>Airport Code: <\/strong>PDX<br><strong>City: <\/strong>Portland<br><strong>Flight Count: <\/strong>101","<strong>Airport Name: <\/strong>Philadelphia International Airport<br><strong>Airport Code: <\/strong>PHL<br><strong>City: <\/strong>Philadelphia<br><strong>Flight Count: <\/strong>194","<strong>Airport Name: <\/strong>Phoenix Sky Harbor International Airport<br><strong>Airport Code: <\/strong>PHX<br><strong>City: <\/strong>Phoenix<br><strong>Flight Count: <\/strong>298","<strong>Airport Name: <\/strong>General Wayne A. Downing Peoria International Airport<br><strong>Airport Code: <\/strong>PIA<br><strong>City: <\/strong>Peoria<br><strong>Flight Count: <\/strong>40","<strong>Airport Name: <\/strong>Pittsburgh International Airport<br><strong>Airport Code: <\/strong>PIT<br><strong>City: <\/strong>Pittsburgh<br><strong>Flight Count: <\/strong>185","<strong>Airport Name: <\/strong>Pensacola Regional Airport<br><strong>Airport Code: <\/strong>PNS<br><strong>City: <\/strong>Pensacola<br><strong>Flight Count: <\/strong>16","<strong>Airport Name: <\/strong>Northern Maine Regional Airport at Presque Isle<br><strong>Airport Code: <\/strong>PQI<br><strong>City: <\/strong>Presque Isle<br><strong>Flight Count: <\/strong>4","<strong>Airport Name: <\/strong>Ernest A. Love Field<br><strong>Airport Code: <\/strong>PRC<br><strong>City: <\/strong>Prescott<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Tri Cities Airport<br><strong>Airport Code: <\/strong>PSC<br><strong>City: <\/strong>Pasco<br><strong>Flight Count: <\/strong>6","<strong>Airport Name: <\/strong>Palm Springs International Airport<br><strong>Airport Code: <\/strong>PSP<br><strong>City: <\/strong>Palm Springs<br><strong>Flight Count: <\/strong>10","<strong>Airport Name: <\/strong>Provincetown Municipal Airport<br><strong>Airport Code: <\/strong>PVC<br><strong>City: <\/strong>Provincetown<br><strong>Flight Count: <\/strong>5","<strong>Airport Name: <\/strong>Theodore Francis Green State Airport<br><strong>Airport Code: <\/strong>PVD<br><strong>City: <\/strong>Providence<br><strong>Flight Count: <\/strong>18","<strong>Airport Name: <\/strong>Portland International Jetport Airport<br><strong>Airport Code: <\/strong>PWM<br><strong>City: <\/strong>Portland<br><strong>Flight Count: <\/strong>71","<strong>Airport Name: <\/strong>Raleigh Durham International Airport<br><strong>Airport Code: <\/strong>RDU<br><strong>City: <\/strong>Raleigh-durham<br><strong>Flight Count: <\/strong>269","<strong>Airport Name: <\/strong>Richmond International Airport<br><strong>Airport Code: <\/strong>RIC<br><strong>City: <\/strong>Richmond<br><strong>Flight Count: <\/strong>156","<strong>Airport Name: <\/strong>Knox County Regional Airport<br><strong>Airport Code: <\/strong>RKD<br><strong>City: <\/strong>Rockland<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Reno Tahoe International Airport<br><strong>Airport Code: <\/strong>RNO<br><strong>City: <\/strong>Reno<br><strong>Flight Count: <\/strong>19","<strong>Airport Name: <\/strong>Greater Rochester International Airport<br><strong>Airport Code: <\/strong>ROC<br><strong>City: <\/strong>Rochester<br><strong>Flight Count: <\/strong>86","<strong>Airport Name: <\/strong>Rochester International Airport<br><strong>Airport Code: <\/strong>RST<br><strong>City: <\/strong>Rochester<br><strong>Flight Count: <\/strong>20","<strong>Airport Name: <\/strong>Southwest Florida International Airport<br><strong>Airport Code: <\/strong>RSW<br><strong>City: <\/strong>Fort Myers<br><strong>Flight Count: <\/strong>435","<strong>Airport Name: <\/strong>Santa Fe Municipal Airport<br><strong>Airport Code: <\/strong>SAF<br><strong>City: <\/strong>Santa Fe<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>San Diego International Airport<br><strong>Airport Code: <\/strong>SAN<br><strong>City: <\/strong>San Diego<br><strong>Flight Count: <\/strong>166","<strong>Airport Name: <\/strong>San Antonio International Airport<br><strong>Airport Code: <\/strong>SAT<br><strong>City: <\/strong>San Antonio<br><strong>Flight Count: <\/strong>137","<strong>Airport Name: <\/strong>Savannah Hilton Head International Airport<br><strong>Airport Code: <\/strong>SAV<br><strong>City: <\/strong>Savannah<br><strong>Flight Count: <\/strong>77","<strong>Airport Name: <\/strong>Santa Barbara Municipal Airport<br><strong>Airport Code: <\/strong>SBA<br><strong>City: <\/strong>Santa Barbara<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>University Park Airport<br><strong>Airport Code: <\/strong>SCE<br><strong>City: <\/strong>State College Pennsylvania<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Louisville International Standiford Field<br><strong>Airport Code: <\/strong>SDF<br><strong>City: <\/strong>Louisville<br><strong>Flight Count: <\/strong>73","<strong>Airport Name: <\/strong>Seattle Tacoma International Airport<br><strong>Airport Code: <\/strong>SEA<br><strong>City: <\/strong>Seattle<br><strong>Flight Count: <\/strong>249","<strong>Airport Name: <\/strong>San Francisco International Airport<br><strong>Airport Code: <\/strong>SFO<br><strong>City: <\/strong>San Francisco<br><strong>Flight Count: <\/strong>266","<strong>Airport Name: <\/strong>Springfield Branson National Airport<br><strong>Airport Code: <\/strong>SGF<br><strong>City: <\/strong>Springfield<br><strong>Flight Count: <\/strong>28","<strong>Airport Name: <\/strong>Norman Y. Mineta San Jose International Airport<br><strong>Airport Code: <\/strong>SJC<br><strong>City: <\/strong>San Jose<br><strong>Flight Count: <\/strong>39","<strong>Airport Name: <\/strong>San Angelo Regional Mathis Field<br><strong>Airport Code: <\/strong>SJT<br><strong>City: <\/strong>San Angelo<br><strong>Flight Count: <\/strong>6","<strong>Airport Name: <\/strong>Luis Munoz Marin International Airport<br><strong>Airport Code: <\/strong>SJU<br><strong>City: <\/strong>San Juan<br><strong>Flight Count: <\/strong>113","<strong>Airport Name: <\/strong>Salt Lake City International Airport<br><strong>Airport Code: <\/strong>SLC<br><strong>City: <\/strong>Salt Lake City<br><strong>Flight Count: <\/strong>212","<strong>Airport Name: <\/strong>Adirondack Regional Airport<br><strong>Airport Code: <\/strong>SLK<br><strong>City: <\/strong>Saranac Lake<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Sacramento International Airport<br><strong>Airport Code: <\/strong>SMF<br><strong>City: <\/strong>Sacramento<br><strong>Flight Count: <\/strong>38","<strong>Airport Name: <\/strong>John Wayne Airport-Orange County Airport<br><strong>Airport Code: <\/strong>SNA<br><strong>City: <\/strong>Santa Ana<br><strong>Flight Count: <\/strong>114","<strong>Airport Name: <\/strong>Sheppard Air Force Base-Wichita Falls Municipal Airport<br><strong>Airport Code: <\/strong>SPS<br><strong>City: <\/strong>Wichita Falls<br><strong>Flight Count: <\/strong>13","<strong>Airport Name: <\/strong>Sarasota Bradenton International Airport<br><strong>Airport Code: <\/strong>SRQ<br><strong>City: <\/strong>Sarasota<br><strong>Flight Count: <\/strong>40","<strong>Airport Name: <\/strong>St Louis Lambert International Airport<br><strong>Airport Code: <\/strong>STL<br><strong>City: <\/strong>St. Louis<br><strong>Flight Count: <\/strong>123","<strong>Airport Name: <\/strong>Charles M. Schulz Sonoma County Airport<br><strong>Airport Code: <\/strong>STS<br><strong>City: <\/strong>Santa Rosa<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Cyril E. King Airport<br><strong>Airport Code: <\/strong>STT<br><strong>City: <\/strong>St. Thomas<br><strong>Flight Count: <\/strong>41","<strong>Airport Name: <\/strong>Henry E Rohlsen Airport<br><strong>Airport Code: <\/strong>STX<br><strong>City: <\/strong>St. Croix Island<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Friedman Memorial Airport<br><strong>Airport Code: <\/strong>SUN<br><strong>City: <\/strong>Hailey<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>Sioux Gateway Col. Bud Day Field<br><strong>Airport Code: <\/strong>SUX<br><strong>City: <\/strong>Sioux City<br><strong>Flight Count: <\/strong>21","<strong>Airport Name: <\/strong>Stillwater Regional Airport<br><strong>Airport Code: <\/strong>SWO<br><strong>City: <\/strong>Stillwater<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Syracuse Hancock International Airport<br><strong>Airport Code: <\/strong>SYR<br><strong>City: <\/strong>Syracuse<br><strong>Flight Count: <\/strong>89","<strong>Airport Name: <\/strong>Tallahassee Regional Airport<br><strong>Airport Code: <\/strong>TLH<br><strong>City: <\/strong>Tallahassee<br><strong>Flight Count: <\/strong>11","<strong>Airport Name: <\/strong>Toledo Express Airport<br><strong>Airport Code: <\/strong>TOL<br><strong>City: <\/strong>Toledo<br><strong>Flight Count: <\/strong>19","<strong>Airport Name: <\/strong>Tampa International Airport<br><strong>Airport Code: <\/strong>TPA<br><strong>City: <\/strong>Tampa<br><strong>Flight Count: <\/strong>257","<strong>Airport Name: <\/strong>Tulsa International Airport<br><strong>Airport Code: <\/strong>TUL<br><strong>City: <\/strong>Tulsa<br><strong>Flight Count: <\/strong>65","<strong>Airport Name: <\/strong>Tucson International Airport<br><strong>Airport Code: <\/strong>TUS<br><strong>City: <\/strong>Tucson<br><strong>Flight Count: <\/strong>31","<strong>Airport Name: <\/strong>Cherry Capital Airport<br><strong>Airport Code: <\/strong>TVC<br><strong>City: <\/strong>Traverse City<br><strong>Flight Count: <\/strong>21","<strong>Airport Name: <\/strong>Texarkana Regional Webb Field<br><strong>Airport Code: <\/strong>TXK<br><strong>City: <\/strong>Texarkana<br><strong>Flight Count: <\/strong>8","<strong>Airport Name: <\/strong>Tyler Pounds Regional Airport<br><strong>Airport Code: <\/strong>TYR<br><strong>City: <\/strong>Tyler<br><strong>Flight Count: <\/strong>7","<strong>Airport Name: <\/strong>McGhee Tyson Airport<br><strong>Airport Code: <\/strong>TYS<br><strong>City: <\/strong>Knoxville<br><strong>Flight Count: <\/strong>52","<strong>Airport Name: <\/strong>Quincy Regional Baldwin Field<br><strong>Airport Code: <\/strong>UIN<br><strong>City: <\/strong>Quincy<br><strong>Flight Count: <\/strong>12","<strong>Airport Name: <\/strong>Victoria Regional Airport<br><strong>Airport Code: <\/strong>VCT<br><strong>City: <\/strong>Victoria<br><strong>Flight Count: <\/strong>14","<strong>Airport Name: <\/strong>Vernal Regional Airport<br><strong>Airport Code: <\/strong>VEL<br><strong>City: <\/strong>Vernal<br><strong>Flight Count: <\/strong>5","<strong>Airport Name: <\/strong>Destin-Ft Walton Beach Airport<br><strong>Airport Code: <\/strong>VPS<br><strong>City: <\/strong>Valparaiso<br><strong>Flight Count: <\/strong>3","<strong>Airport Name: <\/strong>Northwest Arkansas Regional Airport<br><strong>Airport Code: <\/strong>XNA<br><strong>City: <\/strong>Bentonville<br><strong>Flight Count: <\/strong>51","<strong>Airport Name: <\/strong>Yakima Air Terminal McAllister Field<br><strong>Airport Code: <\/strong>YKM<br><strong>City: <\/strong>Yakima<br><strong>Flight Count: <\/strong>7"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"setView":[[40,-93],4,[]],"limits":{"lat":[17.70190048,48.25939941],"lng":[-159.3390045,-64.79859924]}},"evals":[],"jsHooks":[]}</script>
+<hr />
+<ul>
+<li><p>Here is the map of all the operation airport location in the United States during the given time period</p></li>
+<li><p>You can hover over the marker to see more details about the airport</p></li>
+</ul>
+</div>
+</div>
+<div id="tweets-word-frequency" class="section level1 storyboard">
+<h1>Tweets Word Frequency</h1>
+<div id="word-frequency-graph-for-tweets" class="section level3">
+<h3>Word Frequency Graph For Tweets</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-8-1.png" width="576" data-figure-id=fig7 /></p>
+<hr />
+<ul>
+<li><p>I used the twitter Data to generate the word-frequency graph to give you a little insight about how people reacts regarding to the airline during the COVID-19 pandemic</p></li>
+<li><p>I processed the text using tokenization techique idea and remove stop-words and airline carrier names.</p></li>
+<li><p>We can see the word ‘canceled’, ‘delayed’ and ‘hold’ are in the top of the graph which give us some ideas about the airline operation during the COVID-19 pandemic</p></li>
+</ul>
+</div>
+<div id="word-cloud-for-tweets" class="section level3">
+<h3>Word Cloud For Tweets</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-9-1.png" width="576" data-figure-id=fig8 /></p>
+</div>
+</div>
+<div id="network" class="section level1 storyboard">
+<h1>Network</h1>
+<div id="airline-traffic-network" class="section level3">
+<h3>Airline Traffic Network</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-10-1.png" width="576" data-figure-id=fig9 /></p>
+<hr />
+<ul>
+<li><p>This is the airline traffic network for airport that exceed 50 transactions (landing and departing)</p></li>
+<li><p>We can observe some interesting pattern for JFK airport which have a lot of flights going outward while have very minimal flight going in</p></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<script>
+
+$(document).ready(function () {
+
+  // add bootstrap table styles to pandoc tables
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+
+  // initialize mathjax
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+  document.getElementsByTagName("head")[0].appendChild(script);
+
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  FlexDashboard.init({
+    theme: "cosmo",
+    fillPage: true,
+    orientation: "columns",
+    storyboard: true,
+    defaultFigWidth: 576,
+    defaultFigHeight: 460,
+    defaultFigWidthMobile: 360,
+    defaultFigHeightMobile: 460,
+    resize_reload: true
+  });
+});
+</script>
+
+</body>
+</html>

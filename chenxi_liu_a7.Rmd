@@ -1,0 +1,232 @@
+## Chenxi Liu
+## Assightment 7
+
+```{r, echo=FALSE,warning=FALSE,include=FALSE}
+
+library(dplyr, warn.conflicts = F, quietly = T)
+library(tidyr, warn.conflicts = F, quietly = T)
+library(readxl, warn.conflicts = F, quietly = T)
+library(janitor, warn.conflicts = F, quietly = T)
+library(tidyverse, warn.conflicts = F, quietly = T)
+library(ggplot2, warn.conflicts = F, quietly = T)
+library(sf, warn.conflicts = F, quietly = T)
+library(spData, warn.conflicts = F, quietly = T)
+library(maps, warn.conflicts = F, quietly = T)
+library(viridis, warn.conflicts = F, quietly = T)
+library(ggpubr, warn.conflicts = F, quietly = T)
+library(cowplot, warn.conflicts = F, quietly = T)
+library(stringr, warn.conflicts = F, quietly = T)
+library(reticulate, warn.conflicts = F, quietly = T)
+```
+
+
+```{r, echo=FALSE,warning=FALSE,include=FALSE}
+py_install('pandas')
+py_install('numpy')
+py_install('matplotlib')
+py_install('plotly')
+py_install('xlrd')
+py_install('networkx')
+py_install('openpyxl')
+```
+
+
+Analysis note: 
+
+I choose California and Alaska to be my two extra states while they are a lot of people moving away from Texas, California, and New York. People who live in Alaska seems to not move that much. (Maybe due to the small population based on other three states) The arrow indicates the direction where people are moving. Four different colors indicates four origins that we choose. The thickness of the arrow indicates the number of people. 
+
+
+
+```{python, echo=FALSE,warning=FALSE,include = FALSE}
+import openpyxl
+import pandas as pd 
+import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
+import random 
+
+import os
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = 'C:/Users/liuch/AppData/Local/r-miniconda/envs/r-reticulate/Library/plugins/platforms'
+file = 'State_to_State_Migrations_Table_2018.xls'
+data = pd.ExcelFile(file)
+df = data.parse('Table')
+
+#### get the starting point order 
+state = []
+for i in df.iloc[5]:
+    if i is not np.nan and i != 'Total':
+        state.append(i)
+        
+state = state[:len(state)-2]
+
+# drop the rows that is not relevant
+
+for i in range(10):
+    df = df.drop(i)
+
+# reset index after dropping
+    
+df.reset_index(drop=True, inplace=True)
+
+# create a list to drop 
+
+empty_row_index = []
+
+# drop empty rows 
+for i in range(len(df)-1):
+    if df.iloc[i][0] is np.nan:
+        empty_row_index.append(i)
+
+for i in empty_row_index:
+    df = df.drop(i)
+    
+# reset index after dropping 
+df.reset_index(drop=True, inplace=True)    
+
+# drop the rows that is not relevant
+for i in range(53,len(df)):
+    df = df.drop(i)
+
+# reset index after dropping 
+df.reset_index(drop=True, inplace=True)    
+
+# drop the row with header 
+header_index = []
+
+for i in range(len(df)-1):
+    if df.iloc[i][0] not in state:
+        header_index.append(i)
+
+
+for i in header_index:
+    df = df.drop(i)
+    
+# reset index after dropping 
+df.reset_index(drop=True, inplace=True)      
+
+
+
+delete_col = []
+
+for i in range(1,9):
+    delete_col.append(df.columns[i])
+
+for i in df.columns:
+    if df[i][0] in state and i is not df.columns[0]:
+        delete_col.append(i)
+for i in delete_col:
+    df = df.drop(i, axis=1)
+
+second_delete_col = []
+
+for i in range(len(df.columns)):
+    if i is not 0 and i%2 == 0:
+        second_delete_col.append(df.columns[i])
+second_delete_col.append('Unnamed: 128')
+second_delete_col.append('Unnamed: 126')
+second_delete_col.append('Unnamed: 122')
+for i in second_delete_col:
+    df = df.drop(i, axis=1)
+
+new_columns = ['State'] + state
+df.columns = new_columns
+
+
+
+target = []
+start = []
+value = []
+
+for i in range(len(df)):
+    for col in df.columns:
+        if df[col][i] is not np.nan and col != 'State' and col != 'Puerto Rico' and df['State'][i] != 'Puerto Rico':
+            target.append(df['State'][i])
+            start.append(col)
+            value.append(df[col][i])
+
+
+final_df = pd.DataFrame(list(zip(start, target, value)), 
+               columns =['Source', 'Target', 'Count']) 
+cali_df = final_df[final_df['Source'] == 'California']
+texas_df = final_df[final_df['Source'] == 'Texas']
+ny_df = final_df[final_df['Source'] == 'New York']
+alaska_df = final_df[final_df['Source'] == 'Alaska']
+
+cali_df = cali_df.sort_values('Count').head(10)
+texas_df = texas_df.sort_values('Count').head(10)
+ny_df = ny_df.sort_values('Count').head(10)
+alaska_df = alaska_df.sort_values('Count').head(10)
+
+cali_df.reset_index(drop=True, inplace=True)      
+texas_df.reset_index(drop=True, inplace=True)      
+ny_df.reset_index(drop=True, inplace=True)      
+alaska_df.reset_index(drop=True, inplace=True)      
+
+node_list = []
+for i in range(len(cali_df)):
+    if cali_df['Source'][i] not in node_list:
+        node_list.append(cali_df['Source'][i])
+    if cali_df['Target'][i] not in node_list:
+        node_list.append(cali_df['Target'][i])
+for i in range(len(texas_df)):
+    if texas_df['Source'][i] not in node_list:
+        node_list.append(texas_df['Source'][i])
+    if texas_df['Target'][i] not in node_list:
+        node_list.append(texas_df['Target'][i])
+for i in range(len(ny_df)):
+    if ny_df['Source'][i] not in node_list:
+        node_list.append(ny_df['Source'][i])
+    if ny_df['Target'][i] not in node_list:
+        node_list.append(ny_df['Target'][i])
+for i in range(len(alaska_df)):
+    if alaska_df['Source'][i] not in node_list:
+        node_list.append(alaska_df['Source'][i])
+    if alaska_df['Target'][i] not in node_list:
+        node_list.append(alaska_df['Target'][i])
+    
+G = nx.DiGraph()    
+for i in node_list:
+    G.add_node(i)
+
+for i in range(len(cali_df)):
+   G.add_edge(cali_df['Source'][i], cali_df['Target'][i], weight = cali_df['Count'][i], color = 'r') 
+   
+for i in range(len(texas_df)):
+   G.add_edge(texas_df['Source'][i], texas_df['Target'][i], weight = texas_df['Count'][i], color = 'g') 
+   
+for i in range(len(ny_df)):
+   G.add_edge(ny_df['Source'][i], ny_df['Target'][i], weight = ny_df['Count'][i], color = 'b') 
+   
+for i in range(len(alaska_df)):
+   G.add_edge(alaska_df['Source'][i], alaska_df['Target'][i], weight = alaska_df['Count'][i], color = 'y') 
+
+pos = nx.circular_layout(G)
+
+edges = G.edges()
+colors = []
+def randomize():
+    r = random.uniform(0, 1)
+    g = random.uniform(0, 1)
+    b = random.uniform(0, 1)
+    t = (r,g,b)
+    if t in colors:
+        t = randomize()
+    return t 
+for i in range(len(G.nodes())):
+    t = randomize()
+    colors.append(t)
+weights = [G[u][v]['weight'] for u,v in edges]
+norm_weights = [float(i)*50/sum(weights) for i in weights]
+edge_colors = nx.get_edge_attributes(G,'color').values()
+nx.draw_networkx_nodes(G, pos, node_size = 500, node_color = colors)
+nx.draw_networkx_edges(G, pos,node_size=300, arrowstyle="->", arrowsize=10,width = norm_weights, arrows = True, edge_color = edge_colors)
+nx.draw_networkx_labels(G, pos, font_size=8)
+```
+
+
+```{python, echo=FALSE,warning=FALSE}
+plt.show()
+```
+
+
+

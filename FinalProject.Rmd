@@ -1,0 +1,343 @@
+---
+title: "COVID-19 US Flight With Potential Contact"
+output: 
+  flexdashboard::flex_dashboard:
+    navbar:
+      - { title: "Homepage", href: index.html, align: right }
+    storyboard: true
+
+---
+
+```{r setup, include=FALSE}
+
+library(dplyr, warn.conflicts = F, quietly = T)
+library(ggplot2, warn.conflicts =  F, quietly = TRUE)
+flight <- read.csv('Flight_Data.csv')
+flight
+airport <- read.csv('Airport_Info.csv')
+airport
+
+tweet <- read.csv('Tweets.csv')
+tweet
+#### eliminate NA value
+flight <- flight[!(is.na(flight$load_factor)) | !(is.na(flight$weighted_seats)),]
+#### Average seats (weighted per carrier)
+avg_weighted_seat<- flight %>% group_by(carrier_name)%>%summarise(average_weighted_seats = mean(weighted_seats))
+
+### Average Load Factor per Carrier
+avg_load_factor <- flight %>% group_by(carrier_name)%>%summarise(average_load_factors = mean(load_factor))
+### Flight count from origin airport
+flight_count_airport_org <- flight %>%group_by(origin_airport)%>%summarise(flight_count = n())
+### Flight count from distination airport
+flight_count_airport_dst <- flight %>%group_by(dest_airport)%>%summarise(flight_count = n())
+### Flight count per day during that time 
+time_series_data <- flight %>%group_by(date)%>%summarise(flight_count = n())
+### Merge two data sets together to get (origin and distination airport) to get the total flights data
+
+total_flight_airport <- merge(x = flight_count_airport_org, y = flight_count_airport_dst, by.x = "origin_airport", by.y = "dest_airport", all = TRUE)
+total_flight_airport[is.na(total_flight_airport)] <- 0
+total_flight_airport$flight_count = total_flight_airport$flight_count.x + total_flight_airport$flight_count.y
+col_keep <- c('origin_airport','flight_count')
+total_flight_airport <- total_flight_airport[,col_keep]
+total_flight_airport <- total_flight_airport %>% rename(airport_code = origin_airport)
+
+### Merge with the airport location data
+airport_with_location <- total_flight_airport %>% left_join(airport, by = c('airport_code' = 'IATA'))
+
+### get the number of the flights transaction between airports 
+flight_network <- flight %>% group_by(origin_airport, dest_airport) %>% summarise(flight_count = n())
+
+
+
+#### create theme
+custom_theme <- function(){ 
+    font <- "serif"   
+    theme_grey() %+replace%    
+    theme(
+      panel.grid.major = element_blank(),    
+      panel.grid.minor = element_blank(),   
+      plot.title = element_text(family = font,size = 10,face = 'bold',hjust = 0.5,vjust = 2),               
+      axis.line = element_line(size = 0.2, colour = "black"),
+      plot.caption = element_text(family = font,size = 9,hjust = 1),               
+      axis.title = element_text(family = font,face="bold",size = 8),              
+      axis.text = element_text(family = font,face="bold",size = 7)                
+    )
+}
+```
+
+Introduction {.storyboard}
+=======================================================================
+
+
+###  Project Introduction
+
+
+COVID-19 pedemic is an ongoing pandmmic of coronavirus disease. Since the virus are mainly throught the air, 
+
+the public transportation is one of the most common places to get potential contact with some one who has the virus. 
+
+In this project, I will look at the United States airline data with in the time period of mid-March to early April. 
+
+With analyisis of those data I hope you could gain some insight about the United States Airline operation within those days. 
+
+The project contains following part:
+
+1. EDA (Exploratory Data Analysis)
+
+2. Time Series Line Plot 
+
+3. Geolocation Map of the Airport
+
+4. Text Visualization about the related Tweets
+
+5. U.S. Airline Traffic Network within Those Days
+
+There are three data sets used in this project:
+
+1. COVID-19(+) Interactions Within Air Travel
+
+2. Airport Geolocation Data
+
+3. Twitter data about flight during COVID Period
+
+
+
+
+
+EDA {.storyboard}
+=======================================================================
+### Average Weighted Seats For Each Carrier
+
+```{r}
+
+
+##### Begin graphing 
+### EDA
+avg_weighted_seats_graph <- ggplot(data = avg_weighted_seat, aes(x = carrier_name, y = average_weighted_seats))+ geom_bar(stat = 'identity',color="blue", fill="white")
+avg_weighted_seats_graph+coord_flip()+theme(axis.text.x = element_text(angle = 90)) +ylab('Average Weight Seats') + xlab('Airline Carrier')+ ggtitle('Average Weighted Seats For Each Carrier')+custom_theme()
+
+
+
+```
+
+
+***
+
+- Weighted Seats is number of seats available times the loading factor 
+
+- As we can see Sun Country Airline have the largest weighted seats given in the pandemic period and cape air have the lowest weighted seats 
+
+### Boxplot For Average Weighted Seats
+
+```{r}
+p1 <- ggplot(avg_weighted_seat, aes(x = average_weighted_seats ,y = average_weighted_seats, group = 1))
+p1 + geom_boxplot(outlier.colour="blue",
+               outlier.shape=1,
+               outlier.size=2,
+               notch=FALSE)+ xlab('Averge Weighted Seats') + ylab('') + ggtitle('Boxplot for Average Weighted Seats')+custom_theme()
+```
+
+***
+
+- To give you a more detailed look at the weighted seats data, we can see most of the carriers' weighted seats are in the interquartile range with few exceptions
+
+### Average Load Factor For Each Carrier
+
+```{r}
+avg_load_factor_graph <- ggplot(data = avg_load_factor, aes(x = carrier_name, y = average_load_factors))+ geom_bar(stat = 'identity',color="blue", fill="white")
+avg_load_factor_graph+coord_flip()+theme(axis.text.x = element_text(angle = 90))+xlab('Average Load Factor')+ylab('Airline Carrier')+ custom_theme() + ggtitle('Average Load Factor For Each Carrier')+custom_theme()
+```
+
+
+***
+
+- Large number of weighted seats could cause by larger aircraft 
+
+- By looking at the loading factor instead, we can gain more information about how a carrier operations during the pandemic 
+
+- We can see the Sun Country Airline still leading the chart with over 0.9 loading factor 
+
+
+### Boxplot For Average Loading Factor
+
+```{r}
+p2 <- ggplot(avg_load_factor, aes(x = average_load_factors ,y = average_load_factors, group = 1))
+p2 + geom_boxplot(outlier.colour="blue",
+               outlier.shape=1,
+               outlier.size=2,
+               notch=FALSE)+ xlab('Averge Loading Factor') + ylab('') + ggtitle('Boxplot Average Loading Factor')+custom_theme()
+```
+
+***
+
+- To give you a more detailed look at the loading factor data, we can see most of the carriers' loading factor data are in the interquartile range with few exceptions
+
+### Top 10 Airport Traffic
+
+```{r}
+total_flight_airport_graph <- top_n(total_flight_airport, n=10,flight_count) %>% ggplot(., aes(x = airport_code, y = flight_count))+ geom_bar(stat = 'identity',color="blue", fill="white")
+total_flight_airport_graph+xlab('Top 10 Airport For Most Traffic')+ylab('Total Flight Count During The Time Period')+ ggtitle('Top 10 Airport Traffic')+custom_theme()
+```
+
+
+***
+
+- Those are the top 10 airport that have most traffic (in-and-out flight) during the time period 
+
+- We can see JFK (in New York) is the airport that have most traffic. 
+
+Time Series {.storyboard}
+=======================================================================
+
+### Number of Flight by Date 
+
+```{r}
+### Time Series 
+time_series_line <- ggplot(time_series_data, aes(x = as.Date(date),  y = flight_count, group = 1))+
+  geom_line(color='steelblue')+geom_point()+scale_x_date(date_labels = "%b %d")
+
+time_series_line+xlab('Date')+ylab('Total Flight Count')+ggtitle('Time Series Line Chart for Flight Count')+custom_theme()
+```
+
+***
+
+- What about the number of the flight in the time period
+
+- It turns out in the mid March there is increasing trend then the COVID gets more intense in the late March the number of flight go down fast which could be the time when airport starting closing out  
+
+
+Geographic {.storyboard}
+=======================================================================
+
+### Leaflet Map for indicating Airport Location 
+
+```{r}
+### map 
+library(maps, warn.conflicts = F, quietly = T)
+#install.packages("devtools")
+#devtools::install_github("UrbanInstitute/urbnmapr")
+library(tidyverse ,warn.conflicts = F, quietly = T)
+library(urbnmapr,warn.conflicts = F, quietly = T)
+library(leaflet, warn.conflicts = F, quietly = T)
+states_sf <- get_urbn_map("states", sf = TRUE)
+### base map
+### leaflet
+## pop up
+popup_air <- paste0("<strong>Airport Name: </strong>", 
+                    airport_with_location$ï..Name, 
+                     "<br><strong>Airport Code: </strong>", 
+                    airport_with_location$airport_code,
+                     "<br><strong>City: </strong>",
+                    airport_with_location$City,
+                    "<br><strong>Flight Count: </strong>",
+                    airport_with_location$flight_count
+)
+gmap <- leaflet(data = states_sf) %>%
+            # Base groups
+            addTiles() %>%
+            setView(lng = -93, lat = 40, zoom = 4) %>% 
+            # Overlay groups
+            addMarkers(data=airport_with_location,lat=~Lat, lng=~Long, popup=popup_air,group = "Airport")
+                
+            
+        
+    
+gmap
+```
+
+
+*** 
+- Here is the map of all the operation airport location in the United States during the given time period
+
+- You can hover over the marker to see more details about the airport 
+
+
+
+Tweets Word Frequency {.storyboard}
+=======================================================================
+
+### Word Frequency Graph For Tweets 
+
+```{r}
+library(tidytext , warn.conflicts = F, quietly = T)
+#### word frequency chart 
+tweet$stripped_text <- gsub("http.*","",  tweet$text)
+tweet$stripped_text <- gsub("https.*","", tweet$stripped_text)
+tweet$stripped_text <- iconv(tweet$stripped_text, "latin1", "ASCII", sub="")
+tweets_clean <- tweet %>%
+  dplyr::select(stripped_text) %>%
+  unnest_tokens(word, stripped_text)
+
+
+data('stop_words')
+tweets_clean <- tweets_clean %>%
+  anti_join(stop_words)
+words_to_remove <-c('united', 'usairways', 'americanair', 'southwestair', 'jetblue','flight','hours','2', '馃', 'virginamerica','鈥','3')
+tweets_cleaned <- subset(tweets_clean, !(tweets_clean$word %in% words_to_remove))
+tweets_cleaned %>%
+  count(word, sort = TRUE) %>%
+  top_n(20) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col(color="blue", fill="white") +
+  xlab(NULL) +
+  coord_flip() +
+      labs(x = "Count",
+      y = "Unique words",
+      title = "Count of unique words found in tweets")+custom_theme()
+```
+
+
+*** 
+
+- I used the twitter Data to generate the word-frequency graph to give you a little insight about how people reacts regarding to the airline during the COVID-19 pandemic 
+
+- I processed the text using tokenization techique idea and remove stop-words and airline carrier names. 
+
+- We can see the word 'canceled', 'delayed' and 'hold' are in the top of the graph which give us some ideas about the airline operation during the COVID-19 pandemic 
+
+
+### Word Cloud For Tweets 
+
+```{r}
+library(wordcloud)
+word_count <- tweets_cleaned %>%
+  count(word, sort = TRUE) %>%
+  top_n(50)
+wordcloud(words = word_count$word, freq = word_count$n, scale=c(2, .2),random.color = FALSE,        
+          max.words=100, random.order=FALSE, colors= c("coral1","coral2","coral3","coral4"))
+```
+
+
+Network {.storyboard}
+=======================================================================
+
+### Airline Traffic Network 
+
+```{r}
+library(igraph, warn.conflicts = F, quietly = T)
+edges.df.igraph <- flight_network %>%
+  select(origin_airport, dest_airport,flight_count) %>%
+  distinct() %>% filter(flight_count > 50)
+ig = graph.data.frame(edges.df.igraph, directed = TRUE)
+plot(ig,
+     layout = layout.kamada.kawai,
+     vertex.color="blue", vertex.size=10,
+     vertex.frame.color="gray", vertex.label.color="black",
+     vertex.label.cex=0.5, vertex.label.dist=0.5,
+     edge.curved=0.2, edge.arrow.size=0.4,
+     edge.color="light blue")
+title("Network for Airline Traffic for Airports that Exceeds 50 Flights",cex.main=1,col.main="black")
+```
+
+*** 
+
+- This is the airline traffic network for airport that exceed 50 transactions (landing and departing)
+
+- We can observe some interesting pattern for JFK airport which have a lot of flights going outward while have very minimal flight going in
+
+
+
+
+
+
